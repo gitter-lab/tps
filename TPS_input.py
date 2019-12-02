@@ -5,7 +5,7 @@ import scipy as sp
 import numpy as np
 
 # Load excel file of party processed data
-data_xls = pd.ExcelFile('/Users/jack/Downloads/example_data/merged_normalized.xlsx')
+data_xls = pd.ExcelFile('data/timeseries/merged_normalized.xlsx')
 
 # Create empty data frame for result data
 result_data = pd.DataFrame()
