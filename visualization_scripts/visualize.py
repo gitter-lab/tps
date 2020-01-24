@@ -20,6 +20,9 @@ import json
 import sys
 
 # client used for vizmap functions 
+# edit made in table.py:
+# "C:\Users\ajshe\AppData\Roaming\Python\Python35\site-packages\py2cytoscape\cyrest\table.py", line 575
+# changed else to finally 1/24/2020
 from py2cytoscape import cyrest
 
 def main(args):
@@ -36,20 +39,25 @@ def main(args):
 
     #create cyrest client
     cyy = cyrest.cyclient()
-    print(cyy.status())
+    print("CyRest client created")
 
     # Step 1: Create py2cytoscape client
     cy = CyRestClient()
 
     # Reset
     cy.session.delete()
+    print("session reset")
 
     # Step 2: Load network from somewhere
+    print("loading network file")
     tps_net = cy.network.create_from(OUTPUT_FILE)
+    print("Done")
+
 
     # Step 3: Apply layout
     # list of styles to apply
     # only contains the one style loaded from style file 
+    print("apply style file")
     style = cyy.vizmap.load_file(STYLE_FILE)
     print("style name: ", style)
     cyy.vizmap.apply(style[0])

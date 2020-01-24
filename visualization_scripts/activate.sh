@@ -13,5 +13,7 @@ if [ $? -ne 0 ]; then
 fi
 echo "environment activated"
 
+bash launch.sh
+
 python visualize.py $1 $2
 echo "end script"
