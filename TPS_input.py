@@ -5,7 +5,7 @@ import scipy as sp
 import numpy as np
 
 # Load excel file of party processed data
-data_xls = pd.ExcelFile('data/timeseries/merged_normalized.xlsx')
+data_xls = pd.ExcelFile('/Users/jack/Downloads/example_data/merged_normalized.xlsx')
 
 # Create empty data frame for result data
 result_data = pd.DataFrame()
@@ -19,8 +19,6 @@ for sheet_name in data_xls.sheet_names:
 
     index += 1
 
-# Create empty result dataframe to return
-result_data = pd.DataFrame()
 
 # Get rid of all rows except duplicates
 duplicate_data = sheet_list[0][(sheet_list[0]['peptide'].isin(sheet_list[1]['peptide']))].dropna().reset_index(drop=True)
@@ -55,6 +53,8 @@ df = pd.concat([df, df_A], axis=1, ignore_index=True)
 df = pd.concat([df, df_B], axis=1, ignore_index=True)
 df = pd.concat([df, df_C], axis=1, ignore_index=True)
 
+print(df)
+
 replicates = df.stack().reset_index()
 replicates = replicates.rename(columns={'level_0': 'id','level_1': 'replicate', 0:'result'})
 
@@ -72,3 +72,23 @@ print(mComp.tukeyhsd().summary())
 # Export results to excel sheet
 result_data.to_excel("result.xlsx")
 
+########################################################################################
+
+# Test Data
+test_data = pd.read_csv('/Users/jack/Downloads/tps-b1623110bd928e693ed33be5ffd8c71a83e3c1ff/data/timeseries/MultiComparison_example.tsv', sep="\t")
+
+print(test_data)
+
+#test_replicates = test_data.stack().reset_index()
+#test_replicates = test_replicates.rename(columns={'level_0': 'id','level_1': 'groups', 0:'intensities'})
+
+print(test_data.median())
+# median center the data
+test_data.iloc[:,0] = test_data.iloc[:,0].apply(lambda x: x-test_data.median())
+
+print(test_data)
+
+ # Run the MultiComparison test on the test data
+test_mComp = MultiComparison(test_data['K.n[305.21]SSGSGSSVADERVDY[243.03]VVVDQQK[432.30].T-intensities'],test_data['K.n[305.21]SSGSGSSVADERVDY[243.03]VVVDQQK[432.30].T-groups'])
+
+print(test_mComp.tukeyhsd().summary())
