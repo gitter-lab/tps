@@ -93,7 +93,7 @@ def main(args):
 
     OUTPUT_FILE = args[1]
     STYLE_FILE = args[2]
-    DIRNAME = r"C:\Users\ajshe\OneDrive\Documents\Comp_bio\Cytoscape_v3.7.1"
+    DIRNAME = r"C:\Users"
     CYTOSCAPE = 'Cytoscape.exe'
 
     # check if Cytoscape is running 
@@ -109,7 +109,7 @@ def main(args):
         p = subprocess.Popen(cytoPath)
 
         # pause execution, wait for Cytoscape to load
-        time.sleep(45)
+        time.sleep(50)
 
     else:
 
