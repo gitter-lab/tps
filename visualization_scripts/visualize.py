@@ -16,6 +16,7 @@ import networkx as nx
 import pandas as pd
 import json
 import sys
+import time
 
 # client used for vizmap functions 
 # edit made in table.py:
@@ -29,11 +30,11 @@ def main(args):
         NETORK OUTPUT FILE: output file from tps software
         STYLE FILE: style file for cytoscpe 
     """
-
     OUTPUT_FILE = args[1]
     STYLE_FILE = args[2]
     print("output file: " + OUTPUT_FILE)
     print("style file: " + STYLE_FILE)
+    
 
     #create cyrest client
     cyy = cyrest.cyclient()
