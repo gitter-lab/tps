@@ -14,6 +14,7 @@ fi
 echo "environment activated"
 
 #launch Cytoscape
+#launch cytoscape
 bash launch.sh
 
 python visualize.py $1 $2

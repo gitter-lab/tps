@@ -1,7 +1,7 @@
 ## Visualization scripts
 **Intructions**
 
-NOTE: make sure to run the cytoscape app before running bash sript
+NOTE: make sure to run the cytoscape app before running bash sript -> **FIXED**
 
 * call 
 `bash activate.sh output.sif style.xml`
