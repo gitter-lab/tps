@@ -1,11 +1,19 @@
 #!/usr/bin/bash
 
-# 1. start Cytoscape Application
-cyto=$(python find_Cytoscape.py 2>&1)
-echo $cyto
-start $cyto
+isRunning=$(python check_process.py 2>&1)
+echo $isRunning
+Return_true="True"
 
-# 2. assert Cytoscape is running 
-python check_process.py
-echo "checkpoint passed, continuing script"
+ 
+if [ "$isRunning" == "$Return_true" ];
+then 
+    echo "Cytoscape is running"
+    exit 1
+else 
+    echo "find Cytoscape on machine"
+    cyto=$(python find_Cytoscape.py 2>&1)
+    printf "location of Cytoscape\n> "
+    echo $cyto
+    start $cyto
+fi
 

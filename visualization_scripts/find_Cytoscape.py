@@ -1,6 +1,6 @@
 #######################################################
 # find Cytoscape application on user's machine 
-#returns Path to Cytoscape
+# returns Path to Cytoscape
 #######################################################
 import os
 import sys
@@ -9,6 +9,7 @@ import sys
 #! use more efficient search algorithm
 
 dirname = r"C:\Users\ajshe\OneDrive\Documents\Comp_bio\Cytoscape_v3.7.1"
+#dirname = r"C:\Users"
 
 def find_path(name, path):
     result = []

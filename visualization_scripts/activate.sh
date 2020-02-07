@@ -13,6 +13,7 @@ if [ $? -ne 0 ]; then
 fi
 echo "environment activated"
 
+#launch Cytoscape
 bash launch.sh
 
 python visualize.py $1 $2

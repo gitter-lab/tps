@@ -1,11 +1,9 @@
 """ 
-script actiates python environment to run simple cytoscape visualization 
+script loads style file and TPS output file into Cytoscape session
+
+@author: Adam Shedivy
 
 """
-# ? can we activate the environment from a python script?
-#activate enviornment from yml file 
-#import subprocess 
-
 
 # imports 
 from py2cytoscape.data.cynetwork import CyNetwork
