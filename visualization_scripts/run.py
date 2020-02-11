@@ -19,16 +19,21 @@ import sys
 import time
 import subprocess
 import os
-###########################################################################################################
-# client used for vizmap functions 
-# edit made in table.py:
-# "C:\Users\ajshe\AppData\Roaming\Python\Python35\site-packages\py2cytoscape\cyrest\table.py", line 575
-# changed else to finally 1/24/2020
-###########################################################################################################
 
 #assert Cytoscape is running on machine
 
 def process_exists(process_name):
+    """
+    function to assert Cytoscape is running
+
+    Args:
+        process_name (str): name of process to check for
+        example - 'Cytoscape.exe'
+
+    Returns:
+        true if process runnning, else false
+
+    """
     bytes_name = str.encode(process_name)
     call = 'TASKLIST', '/FI', 'imagename eq %s' % process_name
 
@@ -37,11 +42,26 @@ def process_exists(process_name):
 
     # check in last line for process name
     last_line = output.strip().split(b'\r\n')[-1]
+
     return last_line.lower().startswith(bytes_name.lower())
 
 
 def find_path(name, path):
+    """
+    Search Algorithm to find Cytoscape application on machine
+
+    Args:
+        name (str): name of application 
+        path (str): top directory to start search from 
+
+    Returns:
+        path to first match on machine
+    """
+
+    # list to hold found matches
     result = []
+
+    # walk directory/file tree 
     for root, dirs, files in os.walk(path):
         if name in files:
             result.append(os.path.join(root, name))
@@ -91,6 +111,7 @@ def vis(output, style):
 
 def main(args):
 
+    # input args from command line
     OUTPUT_FILE = args[1]
     STYLE_FILE = args[2]
     DIRNAME = r"C:\Users"
