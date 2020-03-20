@@ -1,4 +1,4 @@
-name: py2cyto_min
+name: py2cyto_env
 channels:
   - conda-forge
   - defaults
