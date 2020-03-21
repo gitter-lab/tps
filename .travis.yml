@@ -33,4 +33,9 @@ install:
 
   # there is no package to install, only a collection of scripts
 
-script: py.test
+script:
+  # run PCSF tests in the pcsf conda environment
+  - py.test
+  # test that the py2cyto conda environment can be created as well
+  - source deactivate
+  - conda env create -f visualization_scripts/minimal_env.yml
