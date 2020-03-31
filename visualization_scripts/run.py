@@ -5,22 +5,15 @@ script loads style file and TPS output file into Cytoscape session
 
 """
 
-# imports 
-from py2cytoscape.data.cynetwork import CyNetwork
-from py2cytoscape.data.cyrest_client import CyRestClient
-from py2cytoscape.data.style import StyleUtil
-import py2cytoscape.util.cytoscapejs as cyjs
-import py2cytoscape.cytoscapejs as renderer
-from py2cytoscape import cyrest
-import networkx as nx
-import pandas as pd
-import json
+#imports
 import sys
 import time
 import subprocess
 import os
 from requests.exceptions import ConnectionError as CE
 from json.decoder import JSONDecodeError 
+from py2cytoscape.data.cyrest_client import CyRestClient
+from py2cytoscape import cyrest
 
 #assert Cytoscape is running on machine
 
@@ -89,7 +82,7 @@ def vis(output, style):
 
     # Step 2: Load network from somewhere
     print("---loading network file")
-    tps_net = cy.network.create_from(output)
+    cy.network.create_from(output)
     print("---Done")
     time.sleep(2)
 
@@ -124,16 +117,16 @@ def main(args):
 
 
     # check if Cytoscape is running 
-    isRunning = process_exists('Cytoscape.exe')
+    is_running = process_exists('Cytoscape.exe')
 
-    if (isRunning == False):
+    if (is_running == False):
         print("---Cytoscape not running")
 
         # find path to Cytoscape on machine 
-        cytoPath = find_path(CYTOSCAPE, DIRNAME)
+        cyto_path = find_path(CYTOSCAPE, DIRNAME)
 
         # open Cytoscape 
-        p = subprocess.Popen(cytoPath)
+        p = subprocess.Popen(cyto_path)
 
     else:
 
@@ -142,11 +135,11 @@ def main(args):
 
     # call vis fuction to load input files in Cytoscape session
     # catch errors: ConnectionError, JSONDecoderError
-    connectionCount = 0 
-    JSONCount = 0
+    connection_count = 0 
+    JSON_count = 0
     switch = False
     start = time.time()
-    while switch == False:
+    while switch is False:
         try:
 
             # run visualization function 
@@ -156,8 +149,8 @@ def main(args):
             print("---CyRest client created")
             print("---output file: " + OUTPUT_FILE)
             print("---style file: " + STYLE_FILE)
-            print("---ConnectionError catches: ", connectionCount)
-            print("---JSONDecoderError catches: ", JSONCount)
+            print("---ConnectionError catches: ", connection_count)
+            print("---JSONDecoderError catches: ", JSON_count)
             # --------------------------------------------------
 
             # flip switch value
@@ -166,16 +159,16 @@ def main(args):
         except CE as e:
             
             #requests.ConnectionError caught if connection cannot be made with Cytoscape Server
-            connectionCount += 1
-           # time.sleep(20)
+            connection_count += 1
+            time.sleep(2)
             switch = False
             continue
 
         except JSONDecodeError as e:
 
             # error thorwn from trying to create CyClient
-            JSONCount += 1
-            #time.sleep(20)
+            JSON_count += 1
+            time.sleep(2)
             switch = False
             continue
     end = time.time()
