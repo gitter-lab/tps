@@ -5,19 +5,24 @@ Cytoscape v3.7.1
 
 Anaconda 
 
-**Setup**
+other dependencies noted in `minimal_env.yml` file
+
+
+### Setup
+
+ ***for windows***
 
 Before running the visualization script, edit the run.py file and within the main function. Edit `DIRNAME` and insert the directory that Cytoscape can be found at on your machine. If you do not know where `Cytoscape.exe` is located, you can choose to search the highest directory availible. The script is set to traverse you machines file system starting in the Users directory. 
 
-**Run the Script**
+### Run the Script
 
 From the `visualization_scripts` working direstory of tps call:
 
-`bash activate.sh output.sif "\tps\visualization_scripts\style.xml"`
+`bash activate.sh output.sif "\tps\visualization_scripts\styles.xml"`
 
-Make sure that you use the path to the `style.xml` file within the visualization_scripts directory.
+Make sure that you use the absolute path to the `styles.xml` file within the visualization_scripts directory.
 
-***Anticipated Issues***
+### Anticipated Issues
 
 The search algorithm takes a long time to executive if the DIRNAME is set high up such as `"C:\Users"`, when tesing this on my machine, sometimes a ConnectionError occurs because the Cytoscape application is unable to establish a connection that the visualiation workflow can use. 
 
