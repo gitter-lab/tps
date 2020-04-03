@@ -26,9 +26,7 @@
             <visualProperty default="35.0" name="NODE_SIZE"/>
             <visualProperty default="org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ]," name="NODE_CUSTOMGRAPHICS_3"/>
             <visualProperty default="false" name="NODE_SELECTED"/>
-            <visualProperty default="#9999FF" name="NODE_FILL_COLOR">
-                <passthroughMapping attributeName="name" attributeType="string"/>
-            </visualProperty>
+            <visualProperty default="#9999FF" name="NODE_FILL_COLOR"/>
             <visualProperty default="75.0" name="NODE_WIDTH"/>
             <visualProperty default="C,C,c,0.00,0.00" name="NODE_CUSTOMGRAPHICS_POSITION_1"/>
             <visualProperty default="12" name="NODE_LABEL_FONT_SIZE"/>
