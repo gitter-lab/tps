@@ -112,6 +112,13 @@ def main(args):
     else:
         print ("invalid extension on output file: ", OUTPUT_FILE)
         sys.exit()
+
+    # get absolute paths if nessesay
+    OUTPUT_FILE = os.path.abspath(OUTPUT_FILE)
+    STYLE_FILE = os.path.abspath(STYLE_FILE)
+    print("---absolute output path: ", OUTPUT_FILE)
+    print("---absolute style path: ", STYLE_FILE);
+
     
     #!TODO check style file extensiona and format 
 
