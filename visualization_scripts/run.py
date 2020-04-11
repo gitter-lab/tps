@@ -116,6 +116,8 @@ def main(args):
     # get absolute paths if nessesay
     OUTPUT_FILE = os.path.abspath(OUTPUT_FILE)
     STYLE_FILE = os.path.abspath(STYLE_FILE)
+    Cytoscape = os.path.abspath("Cytoscape.exe");
+    print("")
     print("---absolute output path: ", OUTPUT_FILE)
     print("---absolute style path: ", STYLE_FILE);
 
