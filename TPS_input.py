@@ -70,37 +70,12 @@ if (FULL_DATASET):
     '16min', '32min', '64min', '128min']
 
     # Calculate medians and log2 fold changes
-    medians = pd.DataFrame()
-    log2_fold_changes = pd.DataFrame()
-    for i in result_data.index:
-        # Calculate medians
-        m0 = result_data.iloc[i:i+1,4:5] + result_data.iloc[i:i+1,12:13]+ result_data.iloc[i:i+1,20:21]
-        m2 = result_data.iloc[i:i+1,5:6] + result_data.iloc[i:i+1,13:14]+ result_data.iloc[i:i+1,21:22]
-        m4 = result_data.iloc[i:i+1,6:7] + result_data.iloc[i:i+1,14:15]+ result_data.iloc[i:i+1,22:23]
-        m8 = result_data.iloc[i:i+1,7:8] + result_data.iloc[i:i+1,15:16]+ result_data.iloc[i:i+1,23:24]
-        m16 = result_data.iloc[i:i+1,8:9] + result_data.iloc[i:i+1,16:17]+ result_data.iloc[i:i+1,24:25]
-        m32 = result_data.iloc[i:i+1,9:10] + result_data.iloc[i:i+1,17:18]+ result_data.iloc[i:i+1,25:26]
-        m64 = result_data.iloc[i:i+1,10:11] + result_data.iloc[i:i+1,18:19]+ result_data.iloc[i:i+1,26:27]
-        m128 = result_data.iloc[i:i+1,11:12] + result_data.iloc[i:i+1,19:20]+ result_data.iloc[i:i+1,27:28]
+    for key,value in result_data.iloc[:,4:28].iteritems():
+        median = result_data[key].median()
         # Add medians to median dataframe
-        medians[0].append(m0, ignore_index=True)
-        medians[1].append(m2, ignore_index=True)
-        medians[2].append(m4, ignore_index=True)
-        medians[3].append(m8, ignore_index=True)
-        medians[4].append(m16, ignore_index=True)
-        medians[5].append(m32, ignore_index=True)
-        medians[6].append(m64, ignore_index=True)
-        medians[7].append(m128, ignore_index=True)
-        # Calculate log2 fold changes and add to log2 fold change dataframe
-        log2_fold_changes[0].append(np.log2(m0/m0), ignore_index=True)
-        log2_fold_changes[1].append(np.log2(m2/m0), ignore_index=True)
-        log2_fold_changes[2].append(np.log2(m4/m0), ignore_index=True)
-        log2_fold_changes[3].append(np.log2(m8/m0), ignore_index=True)
-        log2_fold_changes[4].append(np.log2(m16/m0), ignore_index=True)
-        log2_fold_changes[5].append(np.log2(m32/m0), ignore_index=True)
-        log2_fold_changes[6].append(np.log2(m64/m0), ignore_index=True)
-        log2_fold_changes[7].append(np.log2(m128/m0), ignore_index=True)
+        value = (value/median)
     
+    print(result_data)
     
     
     # Run the MultiComparison tests
