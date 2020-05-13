@@ -10,3 +10,4 @@ target
 *.pyc
 local
 results*
+*.ipynb_checkpoints
