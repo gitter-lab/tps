@@ -63,7 +63,7 @@ def find_path(name, path):
     return result[0]
 
 
-def vis(output, style):
+def vis(output, style, table):
     """
     REQUIRED ARGS:
         output: output file from tps software
@@ -94,6 +94,14 @@ def vis(output, style):
     style = cyy.vizmap.load_file(style)
     print("---style name: ", style)
     cyy.vizmap.apply(style[0])
+    
+    # import annotations 
+    cyy.table.import_file(afile=table, 
+                          firstRowAsColumnNames=True,
+                          keyColumnIndex='1',
+                          startLoadRow='0',
+                          dataTypeList="s,s,b,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,s,il,il,il,il,il,s,il,il,il,il,il,il"
+                          )
 
     print("Done! open up cytoscape session")
 
@@ -104,6 +112,7 @@ def main(args):
     # input args from command line
     OUTPUT_FILE = args[1]
     STYLE_FILE = args[2]
+    ANNOTATIONS_FILE = args[3]
     DIRNAME = r"C:\Users\ajshe\OneDrive\Documents\Comp_bio\Cytoscape_v3.7.1"
     CYTOSCAPE = 'Cytoscape.exe'
 
@@ -116,8 +125,10 @@ def main(args):
     # get absolute paths if nessesay
     OUTPUT_FILE = os.path.abspath(OUTPUT_FILE)
     STYLE_FILE = os.path.abspath(STYLE_FILE)
+    ANNOTATIONS_FILE = os.path.abspath(ANNOTATIONS_FILE)
     print("---absolute output path: ", OUTPUT_FILE)
-    print("---absolute style path: ", STYLE_FILE);
+    print("---absolute style path: ", STYLE_FILE)
+    print("---absolute annotations path: ", ANNOTATIONS_FILE)
 
     
     #!TODO check style file extensiona and format 
@@ -150,7 +161,7 @@ def main(args):
         try:
 
             # run visualization function 
-            vis(OUTPUT_FILE, STYLE_FILE)
+            vis(OUTPUT_FILE, STYLE_FILE, ANNOTATIONS_FILE)
 
             # print information --------------------------------
             print("---CyRest client created")

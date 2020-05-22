@@ -28,6 +28,15 @@ else
 	echo "-$FILE2 does not exist"
 	exit
 fi
-python run.py $1 $2
+
+FILE3=$3
+if [ -f "$FILE3" ]; then
+	echo "-$FILE3 exists"
+else 
+	echo "-$FILE3 does not exist"
+	exit
+fi
+
+python run.py $1 $2 $3
 
 echo "-end script"
