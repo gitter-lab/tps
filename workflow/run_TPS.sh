@@ -1,3 +1,4 @@
+#!/usr/bin/sh
 ./scripts/run \
    --network data/networks/input-network.tsv \
    --timeseries data/timeseries/median-time-series.tsv \

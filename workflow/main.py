@@ -1,10 +1,19 @@
 
-from workflow.visualization_utilities import vis, find_path, process_exists
-from workflow.table_generation import PrepTemporalCytoscapeTPS
+from visualization_utilities import vis, find_path, process_exists
+from table_generation import PrepTemporalCytoscapeTPS
+from table_refactor import refactor_col_delim_heat, refactor_col_delim
+from requests.exceptions import ConnectionError as CE
+from json.decoder import JSONDecodeError 
 import os
 import pandas as pd
+import numpy as np
+from datetime import date
+import subprocess
+import sys
+import time
+import csv
 
-def main(args):
+def main():
 
     '''
     run TPS
@@ -13,8 +22,9 @@ def main(args):
     run visualization
     '''
     
-    #* Run TPS!
+    today = date.today()
     
+    #* Run TPS!
     
     #* create Base directory
     baseDir = os.path.abspath(os.path.join('..'))
@@ -27,10 +37,18 @@ def main(args):
     print(tps_in_dir)
     print(tps_out_dir)
     
+    #* Move files into directory
+    output_sif_orig = os.path.join(baseDir, 'output.sif')
+    activity_tsv_orig = os.path.join(baseDir, 'activity-windows.tsv')
+    output_dest = os.path.join(baseDir, 'workflow', 'output.sif')
+    activity_dest = os.path.join(baseDir, 'workflow', 'activity-windows.tsv')
+    
+    os.replace(output_sif_orig, output_dest)
+    os.replace(activity_tsv_orig, activity_dest)
+    
     # input args from command line
     OUTPUT_FILE = os.path.join(baseDir, 'workflow', 'output.sif')
     STYLE_FILE = os.path.join(baseDir, 'workflow', 'tps_style.xml')
-    ANNOTATIONS_FILE = args[3]
     DIRNAME = r"C:\Users\ajshe\OneDrive\Documents\Comp_bio\Cytoscape_v3.7.1"
     CYTOSCAPE = 'Cytoscape.exe'
 
@@ -43,10 +61,9 @@ def main(args):
     # get absolute paths if nessesay
     OUTPUT_FILE = os.path.abspath(OUTPUT_FILE)
     STYLE_FILE = os.path.abspath(STYLE_FILE)
-    ANNOTATIONS_FILE = os.path.abspath(ANNOTATIONS_FILE)
     print("---absolute output path: ", OUTPUT_FILE)
     print("---absolute style path: ", STYLE_FILE)
-    print("---absolute annotations path: ", ANNOTATIONS_FILE)
+
     
     #* Gather data used to generate node anotations
     # Use the version with the header line
@@ -92,10 +109,48 @@ def main(args):
     
     #* get annotations file 
     ANNOTATIONS_FILE = outFile
+    print("---absolute annotations path: ", ANNOTATIONS_FILE)
    
     
     #* Prepare data and directories
-
+    data_delim = pd.read_csv(ANNOTATIONS_FILE, delimiter='\t')
+    temp_d = data_delim
+    cols = data_delim.columns.values[3:19]
+    cols
+    for o in cols:
+        if (data_delim.dtypes[o] == np.float):
+            print("col in float")
+            continue
+        else:
+            data_delim[o] = refactor_col_delim(temp_d, o)
+    
+    
+    temp_d = data_delim
+    cols = data_delim.columns.values[20:]
+    cols
+    for o in cols:
+        if (data_delim.dtypes[o] == np.float):
+            print("col in float")
+            continue
+        else:
+            data_delim[o] = refactor_col_delim_heat(temp_d, o)
+    
+    
+    
+    new_file2 = os.path.join(out_dir, 'annotations_data.csv')
+    new_data = os.path.join(out_dir, 'refactored_annotations.txt')
+    data_delim.to_csv(new_file2, mode='w', index=False )
+    
+    csv_file2 = new_file2
+    txt_file2 = new_data
+    with open(txt_file2, "a") as my_output_file:
+        with open(csv_file2, "r") as my_input_file:
+            [ my_output_file.write("\t".join(row)+'\n') for row in csv.reader(my_input_file)]
+        my_output_file.close()
+        
+        
+    REFACTORED_ANNOTATIONS = txt_file2
+    SAVE_FILE = os.path.join(out_dir, 'TPS_session')
 
     # check if Cytoscape is running 
     is_running = process_exists('Cytoscape.exe')
@@ -124,7 +179,7 @@ def main(args):
         try:
 
             # run visualization function 
-            vis(OUTPUT_FILE, STYLE_FILE, ANNOTATIONS_FILE)
+            vis(OUTPUT_FILE, STYLE_FILE, REFACTORED_ANNOTATIONS, SAVE_FILE)
 
             # print information --------------------------------
             print("---CyRest client created")
@@ -160,4 +215,4 @@ def main(args):
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    main()
