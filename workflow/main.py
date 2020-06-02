@@ -1,3 +1,9 @@
+'''
+Main driver code for end to end TPS workflow
+
+@Author Adam Shedivy 
+
+'''
 
 from visualization_utilities import vis, find_path, process_exists
 from table_generation import PrepTemporalCytoscapeTPS
@@ -16,10 +22,12 @@ import csv
 def main():
 
     '''
-    run TPS
-    gather input data
-    prepare annotations file
-    run visualization
+    Outine:
+        - run TPS
+        - gather input data
+        - prepare annotations file
+        - run visualization
+    
     '''
     
     today = date.today()
@@ -49,6 +57,8 @@ def main():
     # input args from command line
     OUTPUT_FILE = os.path.join(baseDir, 'workflow', 'output.sif')
     STYLE_FILE = os.path.join(baseDir, 'workflow', 'tps_style.xml')
+    
+    # dir name set manually
     DIRNAME = r"C:\Users\ajshe\OneDrive\Documents\Comp_bio\Cytoscape_v3.7.1"
     CYTOSCAPE = 'Cytoscape.exe'
 
@@ -58,7 +68,7 @@ def main():
         print ("invalid extension on output file: ", OUTPUT_FILE)
         sys.exit()
 
-    # get absolute paths if nessesay
+    # get absolute paths if nessesary
     OUTPUT_FILE = os.path.abspath(OUTPUT_FILE)
     STYLE_FILE = os.path.abspath(STYLE_FILE)
     print("---absolute output path: ", OUTPUT_FILE)

@@ -100,7 +100,8 @@ def vis(output, style, table, path):
                           firstRowAsColumnNames=True,
                           keyColumnIndex='1',
                           startLoadRow='0',
-                          dataTypeList="s,s,b,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,s,il,il,il,il,il,s,il,il,il,il,il,il"
+                          dataTypeList="s,s,b,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl \
+                          ,dl,dl,s,il,il,il,il,il,s,il,il,il,il,il,il"
                           )
     
     cyy.session.save_as(session_file=path)
