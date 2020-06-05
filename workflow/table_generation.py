@@ -265,15 +265,15 @@ def PrepTemporalCytoscapeTPS(peptideMapFile, timeSeriesFile, peptideFirstScoreFi
                                     (i+1) for i in range(sigPepCols)]))
         f.write("%s\t" % "\t".join(["InsigPeptide%d" %
                                     (i+1) for i in range(insigPepCols)]))
-        # There is one column for each activity window summary
-        f.write("%s\t" % "\t".join(
-            ["ActivitySummary%s" % time for time in times]))
-        # One column for the first time a protein is active
-        f.write("FirstActive\t")
-        # There is one column for T-1 timepoints that are used to fill in blank
-        # rows in the heat map
-        f.write("%s" % "\t".join(["HeatMapBg%d" % (i+1)
-                                  for i in range(timepoints-1)]))
+        # # There is one column for each activity window summary
+        # f.write("%s\t" % "\t".join(
+        #     ["ActivitySummary%s" % time for time in times]))
+        # # One column for the first time a protein is active
+        # f.write("FirstActive\t")
+        # # There is one column for T-1 timepoints that are used to fill in blank
+        # # rows in the heat map
+        # f.write("%s" % "\t".join(["HeatMapBg%d" % (i+1)
+        #                           for i in range(timepoints-1)]))
         f.write("\n")
 
         allProts = set(itertools.chain(
@@ -327,17 +327,17 @@ def PrepTemporalCytoscapeTPS(peptideMapFile, timeSeriesFile, peptideFirstScoreFi
             if padCols > 0:
                 f.write("".join(itertools.repeat("\t", padCols)))
 
-            # Write the activity window summary
-            windowSummary = prot2WindowsSummary.setdefault(
-                prot, itertools.repeat("", timepoints))
-            f.write("\t%s\t" % "\t".join(windowSummary))
+            # # Write the activity window summary
+            # windowSummary = prot2WindowsSummary.setdefault(
+            #     prot, itertools.repeat("", timepoints))
+            # f.write("\t%s\t" % "\t".join(windowSummary))
 
-            # Write the first active time point
-            f.write("%s\t" % prot2FirstActive.setdefault(prot, "Not active"))
+            # # Write the first active time point
+            # f.write("%s\t" % prot2FirstActive.setdefault(prot, "Not active"))
 
-            # Write the heat map background fill columns
-            fill = ", ".join(itertools.repeat("0", timepoints))
-            f.write("\t".join(itertools.repeat(fill, timepoints-1)))
+            # # Write the heat map background fill columns
+            # fill = ", ".join(itertools.repeat("0", timepoints))
+            # f.write("\t".join(itertools.repeat(fill, timepoints-1)))
             f.write("\n")
 
     print("Wrote attributes for %d Steiner nodes in the TPS pathway" % steinerCount)
