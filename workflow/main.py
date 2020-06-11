@@ -126,26 +126,12 @@ def main():
     print("---absolute annotations path: ", ANNOTATIONS_FILE)
 
     # * Prepare data and directories
-    data_delim = pd.read_csv(ANNOTATIONS_FILE, delimiter='\t')
+    data_delim = pd.read_csv(ANNOTATIONS_FILE, delimiter='\t').drop('Unnamed: 19', 1)
     temp_d = data_delim
-    cols = data_delim.columns.values[3:19]
+    cols = data_delim.columns.values[3:]
     cols
     for o in cols:
-        if (data_delim.dtypes[o] == np.float):
-            print("col in float")
-            continue
-        else:
-            data_delim[o] = refactor_col_delim(temp_d, o)
-
-    temp_d = data_delim
-    cols = data_delim.columns.values[20:]
-    cols
-    for o in cols:
-        if (data_delim.dtypes[o] == np.float):
-            print("col in float")
-            continue
-        else:
-            data_delim[o] = refactor_col_delim_heat(temp_d, o)
+        data_delim[o] = refactor_col_delim(temp_d, o)
 
     new_file2 = os.path.join(out_dir, 'annotations_data.csv')
     new_data = os.path.join(out_dir, 'refactored_annotations.txt')

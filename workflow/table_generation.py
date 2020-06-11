@@ -129,11 +129,9 @@ def PrepTemporalCytoscapeTPS(peptideMapFile, timeSeriesFile, peptideFirstScoreFi
 
             # Create a string representation of the time series that Cytoscape can parse
             if logTransform:
-                print('logTransform')
                 timeSeries, timeSeriesMinq, timeSeriesMaxq = map(robustLog, map(float, timeSeries)), map(
                     robustLog, map(float, timeSeries)), map(robustLog, map(float, timeSeries))
             else:
-                print('not logTransform')
                 timeSeries, timeSeriesMinq, timeSeriesMaxq = map(float, timeSeries), map(float, timeSeries), map(float, timeSeries)
 
 #             print('timeSeries max: ', max(timeSeriesMax))
