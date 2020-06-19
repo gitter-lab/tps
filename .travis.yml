@@ -38,4 +38,4 @@ script:
   - py.test
   # test that the py2cyto conda environment can be created as well
   - source deactivate
-  - conda env create -f visualization_scripts/minimal_env.yml
+  - conda env create -f workflow/minimal_env.yml
