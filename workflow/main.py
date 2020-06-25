@@ -100,7 +100,7 @@ def main():
         baseDir, 'data', 'resources', 'eight-egfr-reference-all.txt')
 
     styleTemplateFile = os.path.join(
-        baseDir, 'notebooks', 'tps_style_template.xml')
+        baseDir, 'data','templates', 'tps_style_template.xml')
 
     out_dir = os.path.join(baseDir, 'results', str(
         today) + '-and-wolf-yadlin-TPS-cytoscape')
