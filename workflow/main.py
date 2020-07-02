@@ -48,21 +48,18 @@ def main():
     print(out_dir)
 
     # * Move files into directory
-    output_sif_orig = os.path.join(baseDir, 'output.sif')
     activity_tsv_orig = os.path.join(baseDir, 'activity-windows.tsv')
     output_tsv_orig = os.path.join(baseDir, 'output.tsv')
     temporal_orig = os.path.join(baseDir, 'temporal-interpretation.tsv')
     
-    output_dest = os.path.join(baseDir, 'workflow', 'output.sif')
-    activity_dest = os.path.join(baseDir, 'workflow', 'activity-windows.tsv')
+    output_dest = os.path.join(baseDir,  'output.sif')
+    activity_dest = os.path.join(baseDir, 'activity-windows.tsv')
 
-    os.replace(output_sif_orig, output_dest)
-    os.replace(activity_tsv_orig, activity_dest)
     os.replace(output_tsv_orig, os.path.join(out_dir, 'output.tsv'))
     os.replace(temporal_orig, os.path.join(out_dir, 'temporal-interpretation.tsv'))
 
     # input args from command line
-    OUTPUT_FILE = os.path.join(baseDir, 'workflow', 'output.sif')
+    OUTPUT_FILE = os.path.join(baseDir, 'output.sif')
     STYLE_FILE = os.path.join(baseDir, 'workflow', 'tps_style.xml')
     print("*** NO NEED TO MOVE FILES")
 
@@ -97,8 +94,8 @@ def main():
     #timeSeriesFile = r"C:\\Users\\ajshe\\Anaconda3\\envs\\py2cyto\\tps\\data\\timeseries\\log2FoldChange011215.txt"
     print(timeSeriesFile)
 
-    windowsFile = os.path.join(baseDir, 'workflow', 'activity-windows.tsv')
-    networkFile = os.path.join(baseDir, 'workflow', 'output.sif')
+    windowsFile = os.path.join(baseDir, 'activity-windows.tsv')
+    networkFile = os.path.join(baseDir, 'output.sif')
     print(windowsFile)
     print(networkFile)
 
