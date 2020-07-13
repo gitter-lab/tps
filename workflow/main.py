@@ -35,6 +35,7 @@ def main():
 
     # * Run TPS!
 
+    # hardcoded values for example data provided ---------------------------------------------------------#
     # * create Base directory
     baseDir = os.path.abspath(os.path.join('..'))
     tps_in_dir = os.path.join(baseDir, 'data', 'timeseries')
@@ -90,10 +91,9 @@ def main():
 
     # Use the version for which log2 fold change has been precomputed
     timeSeriesFile = os.path.join(
-        baseDir, 'data', 'timeseries', 'log2FoldChange011215.txt')
+        baseDir, 'data', 'timeseries', 'log2-fold-change.txt')
     #timeSeriesFile = r"C:\\Users\\ajshe\\Anaconda3\\envs\\py2cyto\\tps\\data\\timeseries\\log2FoldChange011215.txt"
     print(timeSeriesFile)
-
     windowsFile = os.path.join(baseDir, 'activity-windows.tsv')
     networkFile = os.path.join(baseDir, 'output.sif')
     print(windowsFile)
@@ -110,6 +110,8 @@ def main():
     outFile = os.path.join(
         out_dir, 'wolf-yadlin-cytoscape-annotations-' + str(today) + '.txt')
     outStyleFile = os.path.join(out_dir, 'tps_style.xml')
+    
+    # hardcoded values for example data provided ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 
     # * run Utility function
     pvalThresh = 0.01  # Same threhsold used in TPS

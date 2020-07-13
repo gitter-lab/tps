@@ -2,7 +2,7 @@
 
 **TPS workflow overview**
 
-![Alt Text](https://github.com/ajshedivy/tps/blob/visualization_v2/workflow/TPS_workflow.png)
+![Alt Text](workflow/images/TPS_workflow.png)
 
 The TPS/workflow module utilizes the TPS repository structure in order to run the TPS software end-to-end in order to produce Cytoscape sessions. 
 
@@ -20,11 +20,13 @@ The TPS/workflow module utilizes the TPS repository structure in order to run th
   
 - `visualization_utilities.py`
   - utility functions used for creating cyREST client 
-  - import ooutput groah files, style and annotation into Cytoscape
-  - TODO : search machine for Cytoscape executable
+  - import output graph files, style, and annotations into Cytoscape
   
 - `table_refactor.py`
   - helper methods of reformatting annotations data
+
+- `table_generation.py`
+  - helper methods for combining data sources to prepare annotations table for proteins that can be imported into Cytoscape
 
 
 ## Usage
@@ -44,4 +46,4 @@ Example: `users/programs/Cytoscape_v3.7.1`
 With folder `TPS/results`, a time stamped folder is created with the following files:
 * Cytoscape session file
 * annotations data CSV
-* orginal annotations file (no refactoring)
+* original annotations file (no refactoring)
