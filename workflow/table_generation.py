@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Utility functions for processing Wolf-Yadlin EGFR proteomic data.
-Created on 1/12/15
+Utility functions for processing time series proteomic data.
+Created on 2020-01-12
 
-editited (for python 3) by Adam Shedivy 05/22/2020
+editited (for python 3) by Adam Shedivy 2020-05-22
 
 @author: Anthony Gitter
 """
@@ -122,7 +122,6 @@ def PrepTemporalCytoscapeTPS(peptideMapFile, timeSeriesFile, peptideFirstScoreFi
             prot = pep2Prot[parts[0]]
 
             timeSeries = parts[1:]
-            print('init timeSeries {}'.format(timeSeries))
             # Replace missing values if necessary
             if repairMissing:
                 timeSeries = RepairMissingData(timeSeries, defaultFirstValue)

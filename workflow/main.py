@@ -7,7 +7,7 @@ Main driver code for end to end TPS workflow
 
 from visualization_utilities import vis, find_path, process_exists
 from table_generation import PrepTemporalCytoscapeTPS
-from table_refactor import refactor_col_delim_heat, refactor_col_delim
+from table_refactor import refactor_col_delim
 from requests.exceptions import ConnectionError as CE
 from requests.exceptions import HTTPError
 from json.decoder import JSONDecodeError
@@ -131,9 +131,8 @@ def main():
     data_delim = pd.read_csv(ANNOTATIONS_FILE, delimiter='\t').drop('Unnamed: 19', 1)
     temp_d = data_delim
     cols = data_delim.columns.values[3:]
-    cols
-    for o in cols:
-        data_delim[o] = refactor_col_delim(temp_d, o)
+    for col in cols:
+        data_delim[col] = refactor_col_delim(temp_d, col)
 
     new_file2 = os.path.join(out_dir, 'annotations_data.csv')
     new_data = os.path.join(out_dir, 'refactored_annotations.txt')

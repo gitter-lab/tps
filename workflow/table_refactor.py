@@ -9,7 +9,7 @@ import numpy as np
 
 def refactor_col_delim(annotations_df, col_name):
     '''
-    Function used for changing cloumn types of annotaions df
+    Function used for changing column types of annotations df
     for Sig and Insig peptide changes
 
     :param annotations_df (DataFrame): global annptaions dataframe 
@@ -37,7 +37,7 @@ def refactor_col_delim(annotations_df, col_name):
 
 def refactor_col_delim_heat(annotations_df, col_name):
     '''
-    Function used for changing cloumn types of annotaions df
+    Function used for changing column types of annotations df
     for Activity Summaries and Heat Maps
 
     :param annotations_df (DataFrame): global annptaions dataframe 
