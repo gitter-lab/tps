@@ -39,6 +39,7 @@ script:
   # test that the py2cyto conda environment can be created as well
   - source deactivate
   - conda env create -f workflow/minimal_env.yml
+  - source activate py2cyto_environment
   # generate the workflow output files here
   # 
   # run the workflow tests in the required environment
