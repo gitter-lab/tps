@@ -34,8 +34,12 @@ install:
   # there is no package to install, only a collection of scripts
 
 script:
-  # run PCSF tests in the pcsf conda environment
-  - py.test
+  # run the PCSF tests in the pcsf conda environment
+  - pytest pcsf/tests/
   # test that the py2cyto conda environment can be created as well
   - source deactivate
   - conda env create -f workflow/minimal_env.yml
+  # generate the workflow output files here
+  # 
+  # run the workflow tests in the required environment
+  - pytest workflow/tests/
