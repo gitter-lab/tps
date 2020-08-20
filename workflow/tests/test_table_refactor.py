@@ -32,7 +32,7 @@ class TestAnnotations:
         # load data into dataframes
         orig_df = pd.read_csv(orig_annotations, delimiter='\t')
         edit_df = orig_df.drop(['ActivitySummary2min',	'ActivitySummary4min',	'ActivitySummary8min',	'ActivitySummary16min',	'ActivitySummary32min',	\
-            'ActivitySummary64min',	'ActivitySummary128min',	'FirstActive',	'HeatMapBg1',	\
+            'ActivitySummary64min',	'ActivitySummary128min', 'FirstActive',	'HeatMapBg1',	\
                 'HeatMapBg2', 'HeatMapBg3',	'HeatMapBg4',	'HeatMapBg5',	'HeatMapBg6'], axis=1)
 
         results_df = pd.read_csv(results, delimiter='\t').drop('Unnamed: 19', 1)

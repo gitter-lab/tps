@@ -65,7 +65,7 @@ def main():
     print("*** NO NEED TO MOVE FILES")
 
     # dir name set manually
-    DIRNAME = r"C:\Users\ajshe\OneDrive\Documents\Comp_bio\Cytoscape_v3.7.1"
+    DIRNAME = r"C:\Program Files\Cytoscape_v3.7.0"
     CYTOSCAPE = 'Cytoscape.exe'
 
     if OUTPUT_FILE.lower().endswith(".sif"):
