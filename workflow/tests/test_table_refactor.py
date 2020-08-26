@@ -18,33 +18,18 @@ class TestAnnotations:
         
         # get test standard
         test_base = os.path.dirname(os.path.abspath(__file__))
-        print(test_base)
-        orig_annotations = r"C:\Users\ajshe\OneDrive\Documents\GitterLab\tps\results\2020-06-30-and-wolf-yadlin-TPS-cytoscape\refactored_annotations.txt"#os.path.join(test_base, 'test_standards', 'wolf-yadlin-cytoscape-annotations-original.txt')
-        print('orig_annotations: ', orig_annotations)
-        
+        orig_annotations = os.path.join(test_base, 'test_standards', 'wolf-yadlin-cytoscape-annotations-original.txt')
+
         # get recent workflow output
         tps = os.path.abspath(os.path.join('..', '..'))
-        print("tps:", tps)
-        # results = os.path.join(tps, 'results', '2020-06-30-and-wolf-yadlin-TPS-cytoscape', 'wolf-yadlin-cytoscape-annotations-2020-06-30.txt')
-        results = r"C:\Users\ajshe\OneDrive\Documents\GitterLab\tps\results\2020-08-20-and-wolf-yadlin-TPS-cytoscape\refactored_annotations.txt"
-        print("results: ", results)
+        results = os.path.join(tps, 'results', '2020-06-30-and-wolf-yadlin-TPS-cytoscape', 'wolf-yadlin-cytoscape-annotations-2020-06-30.txt')
         
         # load data into dataframes
         orig_df = pd.read_csv(orig_annotations, delimiter='\t')
-        # edit_df = orig_df.drop(['ActivitySummary2min',	'ActivitySummary4min',	'ActivitySummary8min',	'ActivitySummary16min',	'ActivitySummary32min',	\
-        #     'ActivitySummary64min',	'ActivitySummary128min', 'FirstActive',	'HeatMapBg1',	\
-        #         'HeatMapBg2', 'HeatMapBg3',	'HeatMapBg4',	'HeatMapBg5',	'HeatMapBg6'], axis=1)
+        edit_df = orig_df.drop(['ActivitySummary2min',	'ActivitySummary4min',	'ActivitySummary8min',	'ActivitySummary16min',	'ActivitySummary32min',	\
+            'ActivitySummary64min',	'ActivitySummary128min', 'FirstActive',	'HeatMapBg1',	\
+                'HeatMapBg2', 'HeatMapBg3',	'HeatMapBg4',	'HeatMapBg5',	'HeatMapBg6'], axis=1)
 
-        results_df = pd.read_csv(results, delimiter='\t')
+        results_df = pd.read_csv(results, delimiter='\t').drop('Unnamed: 19', 1)
         
-        assert orig_df.equals(results_df), "dataframes not equal"
-
-def main():
-    test = TestAnnotations()
-    if test.test_table_refactor():
-        print("pass")
-    else:
-        print("not pass")
-
-if __name__ == "__main__":
-    main()    
+        assert edit_df.equals(results_df), "dataframes not equal"
