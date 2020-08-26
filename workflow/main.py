@@ -178,7 +178,7 @@ def main():
         try:
             
             # run visualization function
-            vis(OUTPUT_FILE, STYLE_FILE, REFACTORED_ANNOTATIONS, SAVE_FILE)
+            vis(OUTPUT_FILE, outStyleFile, REFACTORED_ANNOTATIONS, SAVE_FILE)
             
             # * Move files into directory
             results_output_dest = os.path.join(out_dir, 'output.sif')
