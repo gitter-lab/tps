@@ -18,11 +18,13 @@ class TestAnnotations:
         
         # get test standard
         test_base = os.path.dirname(os.path.abspath(__file__))
+        print(test_base)
         orig_annotations = os.path.join(test_base, 'test_standards', 'wolf-yadlin-cytoscape-annotations-original.txt')
 
         # get recent workflow output
-        tps = os.path.abspath(os.path.join('..', '..'))
-        results = os.path.join(tps, 'results', '2020-06-30-and-wolf-yadlin-TPS-cytoscape', 'wolf-yadlin-cytoscape-annotations-2020-06-30.txt')
+        tps = os.path.abspath(os.path.join('..'))
+        print(tps)
+        results = os.path.join(tps, 'tps', 'results', '2020-06-30-and-wolf-yadlin-TPS-cytoscape', 'wolf-yadlin-cytoscape-annotations-2020-06-30.txt')
         
         # load data into dataframes
         orig_df = pd.read_csv(orig_annotations, delimiter='\t')
