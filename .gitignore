@@ -10,3 +10,4 @@ target
 *.pyc
 local
 *.ipynb_checkpoints
+.vscode/
