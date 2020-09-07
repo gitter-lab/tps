@@ -9,4 +9,5 @@ project/target
 target
 *.pyc
 local
-results*
+*.ipynb_checkpoints
+.vscode/
