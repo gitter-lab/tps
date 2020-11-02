@@ -3,11 +3,10 @@ import subprocess
 
 
 class Parser:
+    def __init__(self, params):
+        self.params = params
 
-    _args = {
-
-    }
-    def parse(self, config, params):
+    def parse(self):
 
         '''
         - parse input config file 
@@ -21,23 +20,7 @@ class Parser:
 
       
         '''
-
-        args = ['--network', \
-        '--timeseries', \
-        '--firstscores', \
-        '--prevscores', \
-        '--partialmodel', \
-        '--peptidemap', \
-        '--source',    \
-        '--threshold'] 
-
-        # config = os.path.abspath(config)
-        # with open(config) as c:
-        #     params = yaml.load(c, Loader = yaml.FullLoader)
-
-        tps_paramS = []
-
-        # # grab TPS params 
+        # # grab TPS self.params 
         build = []
         OUT_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         OUT_LABEL = ""
@@ -45,9 +28,9 @@ class Parser:
         # add TPS run call as first arg
         build.extend(["bash", "./scripts/run"])
 
-        # grab params from config
-        req = params[1]["TPS"][0]["required"]
-        op = params[1]["TPS"][1]["optional"]
+        # grab self.params from config
+        req = self.params[1]["TPS"][0]["required"]
+        op = self.params[1]["TPS"][1]["optional"]
 
         # filter given args
         filtered = {**req, **op}

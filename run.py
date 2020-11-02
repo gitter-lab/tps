@@ -1,3 +1,10 @@
+'''
+Full TPS workflow 
+end-point: Cytoscape session 
+
+'''
+
+
 import yaml
 import pprint
 import sys
@@ -26,10 +33,10 @@ def main(args):
     with open(config) as c:
         params = yaml.load(c, Loader = yaml.FullLoader)
 
-    parser = Parser()
-    viz_engine  = Visualization()
-    outputs, out_folder, label = parser.parse(config, params)
-    annot, style = viz_engine.generate_annotations(outputs, params, out_folder)
+    parser = Parser(params)
+    viz_engine  = Visualization(params)
+    outputs, out_folder, label = parser.parse()
+    annot, style = viz_engine.generate_annotations(outputs, out_folder)
 
     print("OUTPUTS_LIST: ", outputs)
 

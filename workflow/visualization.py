@@ -13,11 +13,12 @@ from workflow.visualization_utilities import vis, find_path, process_exists
 
 class Visualization:
 
+    def __init__(self, params):
+        self.params = params
+
     def refactor(self, outFile, out_folder):
             '''
-
-            refactor annotations 
-
+            refactor annotations
 
             '''
 
@@ -31,8 +32,8 @@ class Visualization:
             for col in cols:
                 data_delim[col] = refactor_col_delim(temp_d, col)
 
-            new_file2 = os.path.join(out_folder, 'annotations_data.csv')
-            new_data = os.path.join(out_folder, 'refactored_annotations.txt')
+            new_file2 = os.path.join(out_folder, self.params[2]["Annotations"]["outAnnotFile"] + '-annotations_data.csv')
+            new_data = os.path.join(out_folder, self.params[2]["Annotations"]["outAnnotFile"] + '-refactored_annotations.txt')
             data_delim.to_csv(new_file2, mode='w', index=False)
 
             csv_file2 = new_file2
@@ -46,7 +47,7 @@ class Visualization:
             REFACTORED_ANNOTATIONS = txt_file2
             return os.path.join(out_folder, REFACTORED_ANNOTATIONS)
 
-    def generate_annotations(self, outputs, params, out_folder):
+    def generate_annotations(self, outputs, out_folder):
         '''
 
         takes outputs from parse and generates orginal annotations 
@@ -55,20 +56,20 @@ class Visualization:
         '''
         windowsFile = os.path.join(out_folder, outputs[-1]+'-activity-windows.tsv')
         networkFile = os.path.join(out_folder, outputs[-1]+'-output.sif')
-        outFile = os.path.join(out_folder, params[2]["Annotations"]["outAnnotFile"] + '.txt')
-        styleFile = os.path.join(out_folder, params[2]["Annotations"]["outStyleFile"])
+        outFile = os.path.join(out_folder, self.params[2]["Annotations"]["outAnnotFile"] + '.txt')
+        styleFile = os.path.join(out_folder, self.params[2]["Annotations"]["outStyleFile"])
 
-        pepsPerProt = PrepTemporalCytoscapeTPS(params[2]["Annotations"]["peptideMapFile"], 
-                                            params[2]["Annotations"]["timeSeriesFile"], 
-                                            params[2]["Annotations"]["peptideFirstScores"],
-                                            params[2]["Annotations"]["peptidePrevScoreFile"], 
+        pepsPerProt = PrepTemporalCytoscapeTPS(self.params[2]["Annotations"]["peptideMapFile"], 
+                                            self.params[2]["Annotations"]["timeSeriesFile"], 
+                                            self.params[2]["Annotations"]["peptideFirstScores"],
+                                            self.params[2]["Annotations"]["peptidePrevScoreFile"], 
                                             windowsFile, 
                                             networkFile,
-                                            params[2]["Annotations"]["goldStandardFile"], 
-                                            params[2]["Annotations"]["pvalThresh"], 
-                                            params[2]["Annotations"]["logTransform"], 
-                                            params[2]["Annotations"]["styleTemplateFile"],
+                                            self.params[2]["Annotations"]["goldStandardFile"], 
+                                            self.params[2]["Annotations"]["pvalThresh"], 
+                                            self.params[2]["Annotations"]["logTransform"], 
+                                            self.params[2]["Annotations"]["styleTemplateFile"],
                                             outFile,
                                             styleFile,
-                                            params[2]["Annotations"]["addZero"]) # don't provide logDefault
+                                            addZero=self.params[2]["Annotations"]["addZero"]) # don't provide logDefault
         return self.refactor(outFile, out_folder), styleFile
