@@ -13,6 +13,6 @@ if [ $? -ne 0 ]; then
 fi
 echo "-environment activated"
  
-python parser.py $1
+python run.py $1
 
 echo "-end script"
