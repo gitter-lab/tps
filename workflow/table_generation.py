@@ -142,7 +142,7 @@ def PrepTemporalCytoscapeTPS(peptideMapFile, timeSeriesFile, peptideFirstScoreFi
             timeSeries = ", ".join(map(str, timeSeries))
 
             if addZero:
-                timeSeries = "0, " + timeSeries
+                timeSeries = "0.0, " + timeSeries
 
             # All peptide time series are added to the "all" map
             prot2TimeSeries["all"][prot].append(timeSeries)

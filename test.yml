@@ -1,5 +1,5 @@
 - Cytoscape: 
-    path: C:\Users\ajshe\OneDrive\Documents\Comp_bio\Cytoscape_v3.7.1
+    path: C:\Users\ajshe\OneDrive\Documents\Comp_bio\Cytoscape_v3.7.1 
     session: "tps_session_test.cys"
 
 - TPS:
@@ -10,7 +10,7 @@
         prevscores: data/timeseries/p-values-prev.tsv
         source: EGF_HUMAN
         threshold: 0.01
-        outlabel: "test-new-full"
+        outlabel: "update-table-gen"
     - optional:
         partialmodel: data/resources/kinase-substrate-interactions.sif
         peptidemap: data/timeseries/peptide-mapping.tsv
@@ -32,7 +32,7 @@
     pvalThresh: 0.01
     logTransform: False
     styleTemplateFile: data/templates/tps_style_template.xml
-    outAnnotFile: "annotations_test-full"
+    outAnnotFile: "update-table=gen"
     outStyleFile: "style_output.xml"
     addZero: True           # default
     logDefault: -1.0        # default

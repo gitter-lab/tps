@@ -54,6 +54,8 @@ class Visualization:
 
 
         '''
+        print("=================================================")
+        print("GENERATE ANNOTATIONS")
         windowsFile = os.path.join(out_folder, outputs[-1]+'-activity-windows.tsv')
         networkFile = os.path.join(out_folder, outputs[-1]+'-output.sif')
         outFile = os.path.join(out_folder, self.params[2]["Annotations"]["outAnnotFile"] + '.txt')

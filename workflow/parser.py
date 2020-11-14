@@ -20,9 +20,11 @@ class Parser:
 
       
         '''
+        print("=================================================")
+        print("START PARSING CONFIG")
         # # grab TPS self.params 
         build = []
-        OUT_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        OUT_FOLDER = ""
         OUT_LABEL = ""
 
         # add TPS run call as first arg
@@ -37,12 +39,12 @@ class Parser:
         args = {key:val for key, val in filtered.items() 
                 if filtered[key] != ""}
 
-                    
+        OUT_LABEL = [str(val) for key, val in args.items() if key == "outlabel"][0]
+        OUT_FOLDER = os.path.abspath([val for key, val in args.items() if key == "outfolder"][0])
+        if OUT_FOLDER == "":
+            OUT_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
         for key, val in args.items():
-            if key == "outlabel":
-                OUT_LABEL = str(val)
-            if key == "outfolder":
-                OUT_FOLDER = os.path.abspath(val)
             if val == "1":
                 build.extend(['--' + key])
             else:
@@ -50,8 +52,10 @@ class Parser:
                 build.extend([k, str(val)])
 
  
-        print("outfolder switch {}".format(OUT_FOLDER))
-        print("OUTLABEL: ", OUT_LABEL)
+        print("---outfolder switch {}".format(OUT_FOLDER))
+        print("---OUTLABEL: ", OUT_LABEL)
+        print("---tps build:")
+        print(build)
 
         process = subprocess.run(
             build,

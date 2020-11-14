@@ -59,7 +59,7 @@ def main(args):
     is_running = process_exists('Cytoscape.exe')
 
     if (is_running == False):
-        print("---Cytoscape not running")
+        print("Cytoscape not running")
 
         # find path to Cytoscape on machine
         cyto_path = find_path(CYTOSCAPE, DIRNAME)
@@ -108,9 +108,9 @@ def main(args):
             time.sleep(2)
             switch = False
     end = time.time()
-    print("---time elapsed: ", end - start)
+    print("time elapsed: ", end - start)
 
-    print("---Finish loading output file and style file")
+    print("Finish loading output file and style file")
 
 
 
