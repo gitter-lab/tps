@@ -33,8 +33,8 @@ class Parser:
         build.extend(["bash", "./scripts/run"])
 
         # grab self.params from config
-        req = self.params[1]["TPS"][0]["required"]
-        op = self.params[1]["TPS"][1]["optional"]
+        req = self.params["TPS"]["required"]
+        op = self.params["TPS"]["optional"]
 
         # filter given args
         filtered = {**req, **op}
@@ -76,6 +76,11 @@ class Parser:
 
         # check output 
         outputs = str(subprocess.check_output(["ls", "-d", str(OUT_LABEL)+"*"], cwd=OUT_FOLDER), encoding= "utf-8").strip().split()
+
+        for file in outputs:
+            if not os.path.exists(file):
+                raise Exception("output file {} was not generated, check TPS build".format(file))
+
 
         outputs.append(OUT_LABEL)
 

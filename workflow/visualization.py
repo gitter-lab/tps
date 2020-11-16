@@ -32,8 +32,8 @@ class Visualization:
             for col in cols:
                 data_delim[col] = refactor_col_delim(temp_d, col)
 
-            new_file2 = os.path.join(out_folder, self.params[2]["Annotations"]["outAnnotFile"] + '-annotations_data.csv')
-            new_data = os.path.join(out_folder, self.params[2]["Annotations"]["outAnnotFile"] + '-refactored_annotations.txt')
+            new_file2 = os.path.join(out_folder, self.params["Annotations"]["outAnnotFile"] + '-annotations_data.csv')
+            new_data = os.path.join(out_folder, self.params["Annotations"]["outAnnotFile"] + '-refactored_annotations.txt')
             data_delim.to_csv(new_file2, mode='w', index=False)
 
             csv_file2 = new_file2
@@ -58,20 +58,20 @@ class Visualization:
         print("GENERATE ANNOTATIONS")
         windowsFile = os.path.join(out_folder, outputs[-1]+'-activity-windows.tsv')
         networkFile = os.path.join(out_folder, outputs[-1]+'-output.sif')
-        outFile = os.path.join(out_folder, self.params[2]["Annotations"]["outAnnotFile"] + '.txt')
-        styleFile = os.path.join(out_folder, self.params[2]["Annotations"]["outStyleFile"])
+        outFile = os.path.join(out_folder, self.params["Annotations"]["outAnnotFile"] + '.txt')
+        styleFile = os.path.join(out_folder, self.params["Annotations"]["outStyleFile"])
 
-        pepsPerProt = PrepTemporalCytoscapeTPS(self.params[2]["Annotations"]["peptideMapFile"], 
-                                            self.params[2]["Annotations"]["timeSeriesFile"], 
-                                            self.params[2]["Annotations"]["peptideFirstScores"],
-                                            self.params[2]["Annotations"]["peptidePrevScoreFile"], 
+        pepsPerProt = PrepTemporalCytoscapeTPS(self.params["Annotations"]["peptideMapFile"], 
+                                            self.params["Annotations"]["timeSeriesFile"], 
+                                            self.params["Annotations"]["peptideFirstScores"],
+                                            self.params["Annotations"]["peptidePrevScoreFile"], 
                                             windowsFile, 
                                             networkFile,
-                                            self.params[2]["Annotations"]["goldStandardFile"], 
-                                            self.params[2]["Annotations"]["pvalThresh"], 
-                                            self.params[2]["Annotations"]["logTransform"], 
-                                            self.params[2]["Annotations"]["styleTemplateFile"],
+                                            self.params["Annotations"]["goldStandardFile"], 
+                                            self.params["Annotations"]["pvalThresh"], 
+                                            self.params["Annotations"]["logTransform"], 
+                                            self.params["Annotations"]["styleTemplateFile"],
                                             outFile,
                                             styleFile,
-                                            addZero=self.params[2]["Annotations"]["addZero"]) # don't provide logDefault
+                                            addZero=self.params["Annotations"]["addZero"]) # don't provide logDefault
         return self.refactor(outFile, out_folder), styleFile

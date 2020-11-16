@@ -42,11 +42,11 @@ def main(args):
 
 
     CYTOSCAPE = "Cytoscape.exe"
-    DIRNAME = params[0]['Cytoscape']["path"]
+    DIRNAME = params['Cytoscape']["path"]
     OUTPUT_FILE = os.path.join(out_folder, label+"-output.sif")
     outStyleFile = style
     REFACTORED_ANNOTATIONS = annot
-    SAVE_FILE = os.path.join(out_folder, params[0]['Cytoscape']["session"])
+    SAVE_FILE = os.path.join(out_folder, params['Cytoscape']["session"])
 
     print("CYTOSCPAPE: ", CYTOSCAPE)
     print("DIRNAME: ", DIRNAME)
