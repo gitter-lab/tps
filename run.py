@@ -38,6 +38,8 @@ def main(args):
     outputs, out_folder, label = parser.parse()
     annot, style = viz_engine.generate_annotations(outputs, out_folder)
 
+    sys.stdout.flush()
+
     print("OUTPUTS_LIST: ", outputs)
 
 
