@@ -1,7 +1,6 @@
 - Cytoscape: 
     path: C:\Users\ajshe\OneDrive\Documents\Comp_bio\Cytoscape_v3.7.1 
     session: "tps_session_test.cys"
-
 - TPS:
     - required:
         network: data/networks/input-network.tsv
@@ -14,13 +13,13 @@
     - optional:
         partialmodel: data/resources/kinase-substrate-interactions.sif
         peptidemap: data/timeseries/peptide-mapping.tsv
-        outfolder: ""
-        solver: ""
-        slack: ""
-        bitvect: "" 
-        no-connectivity: ""     # bool
-        no-temporality: ""      # bool
-        no-monotonicity: ""     # bool
+        outfolder: "None"
+        solver: "None"
+        slack: "None"
+        bitvect: "None"
+        no-connectivity: "None"     # bool
+        no-temporality: "None"      # bool
+        no-monotonicity: "None"     # bool
 - Annotations: 
     peptideMapFile: data/timeseries/peptide-mapping.tsv
     timeSeriesFile: data/timeseries/log2-fold-change.txt

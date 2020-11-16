@@ -22,6 +22,8 @@ class Parser:
         '''
         print("=================================================")
         print("START PARSING CONFIG")
+
+        
         # # grab TPS self.params 
         build = []
         OUT_FOLDER = ""
@@ -37,13 +39,20 @@ class Parser:
         # filter given args
         filtered = {**req, **op}
         args = {key:val for key, val in filtered.items() 
-                if filtered[key] != ""}
+                if filtered[key] != "None"}
 
+        # grab out label (required)
         OUT_LABEL = [str(val) for key, val in args.items() if key == "outlabel"][0]
-        OUT_FOLDER = os.path.abspath([val for key, val in args.items() if key == "outfolder"][0])
-        if OUT_FOLDER == "":
-            OUT_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+        # check for out dir (optional)
+        # list will contain one item if path provided, else empty list returned 
+        OUT_FOLDER = [str(val) for key, val in args.items() if key == "outfolder"]
+        if OUT_FOLDER == []:
+            OUT_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        else:
+            OUT_FOLDER = os.path.dirname(os.path.abspath(OUT_FOLDER[0]))
+
+        # build tps call 
         for key, val in args.items():
             if val == "1":
                 build.extend(['--' + key])
@@ -52,18 +61,20 @@ class Parser:
                 build.extend([k, str(val)])
 
  
+        # debug statements 
         print("---outfolder switch {}".format(OUT_FOLDER))
         print("---OUTLABEL: ", OUT_LABEL)
         print("---tps build:")
         print(build)
 
+        # run TPS 
         process = subprocess.run(
             build,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
-        # check output 
 
+        # check output 
         outputs = str(subprocess.check_output(["ls", "-d", str(OUT_LABEL)+"*"], cwd=OUT_FOLDER), encoding= "utf-8").strip().split()
 
         outputs.append(OUT_LABEL)
