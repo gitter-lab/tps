@@ -28,6 +28,7 @@ class Parser:
         build = []
         OUT_FOLDER = ""
         OUT_LABEL = ""
+        OUT_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
         # add TPS run call as first arg
         build.extend(["bash", "./scripts/run"])
@@ -35,6 +36,7 @@ class Parser:
         # grab self.params from config
         req = self.params["TPS"]["required"]
         op = self.params["TPS"]["optional"]
+        flags = self.params["TPS"]['flags']
 
         # filter given args
         filtered = {**req, **op}
@@ -42,25 +44,20 @@ class Parser:
                 if filtered[key] != "None"}
 
         # grab out label (required)
-        OUT_LABEL = [str(val) for key, val in args.items() if key == "outlabel"][0]
+        OUT_LABEL = args['outlabel']
 
         # check for out dir (optional)
         # list will contain one item if path provided, else empty list returned 
-        OUT_FOLDER = [str(val) for key, val in args.items() if key == "outfolder"]
-        if OUT_FOLDER == []:
-            OUT_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        else:
-            OUT_FOLDER = os.path.dirname(os.path.abspath(OUT_FOLDER[0]))
+        check_outfolder = 'outfolder'
+        if check_outfolder in args:
+            OUT_FOLDER = args[check_outfolder]
 
         # build tps call 
         for key, val in args.items():
-            if val == "1":
-                build.extend(['--' + key])
-            else:
-                k = "--" + key
-                build.extend([k, str(val)])
+            k = "--" + key
+            build.extend([k, str(val)])
+        build.extend(flags)
 
- 
         # debug statements 
         print("---outfolder switch {}".format(OUT_FOLDER))
         print("---OUTLABEL: ", OUT_LABEL)
