@@ -13,10 +13,10 @@ TPS:
     optional:
         partialmodel: data/resources/kinase-substrate-interactions.sif
         peptidemap: data/timeseries/peptide-mapping.tsv
-        outfolder: "None"           # default: None (tps root directory)
-        solver: "None"
-        slack: "None"
-        bitvect: "None"
+        outfolder: <value-here>           # default: None (tps root directory)
+        solver: <value-here>
+        slack: <value-here>
+        bitvect: <value-here>
     flags: [--no-connectivity, --no-temporality, --no-monotonicity]
 
     peptideMapFile: data/timeseries/peptide-mapping.tsv

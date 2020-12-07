@@ -26,9 +26,9 @@ class Parser:
         
         # # grab TPS self.params 
         build = []
-        OUT_FOLDER = ""
         OUT_LABEL = ""
         OUT_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        DEFAULT = "<value-here>"  # config file for defaults?
 
         # add TPS run call as first arg
         build.extend(["bash", "./scripts/run"])
@@ -41,7 +41,7 @@ class Parser:
         # filter given args
         filtered = {**req, **op}
         args = {key:val for key, val in filtered.items() 
-                if filtered[key] != "None"}
+                if filtered[key] != DEFAULT}
 
         # grab out label (required)
         OUT_LABEL = args['outlabel']

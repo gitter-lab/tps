@@ -34,9 +34,12 @@ def main(args):
         params = yaml.load(c, Loader = yaml.FullLoader)
 
     parser = Parser(params)
+    sys.stdout.flush()
     viz_engine  = Visualization(params)
+    sys.stdout.flush()
     outputs, out_folder, label = parser.parse()
     annot, style = viz_engine.generate_annotations(outputs, out_folder)
+    sys.stdout.flush()
 
     print("OUTPUTS_LIST: ", outputs)
 
