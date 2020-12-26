@@ -1,4 +1,5 @@
 import os
+import glob
 import subprocess
 
 
@@ -36,7 +37,9 @@ class Parser:
         # grab self.params from config
         req = self.params["TPS"]["required"]
         op = self.params["TPS"]["optional"]
-        flags = self.params["TPS"]['flags']
+        flags = []
+        if self.params["TPS"]['flags'] is not None:
+            flags = ['--' + flag for flag in self.params["TPS"]['flags']]
 
         # filter given args
         filtered = {**req, **op}
@@ -72,7 +75,10 @@ class Parser:
         )
 
         # check output 
-        outputs = str(subprocess.check_output(["ls", "-d", str(OUT_LABEL)+"*"], cwd=OUT_FOLDER), encoding= "utf-8").strip().split()
+        # outputs = str(subprocess.check_output(["ls", "-d", str(OUT_LABEL)+"*"], cwd=OUT_FOLDER), encoding= "utf-8").strip().split()
+
+
+        outputs = glob.glob(OUT_FOLDER + f'*\{OUT_LABEL}*', recursive=False)
 
         for file in outputs:
             if not os.path.exists(file):
