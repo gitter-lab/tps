@@ -21,10 +21,7 @@ class Parser:
 
       
         '''
-        print("=================================================")
-        print("START PARSING CONFIG")
-
-        
+    
         # # grab TPS self.params 
         build = []
         OUT_LABEL = ""

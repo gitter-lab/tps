@@ -33,6 +33,8 @@ def main(args):
     with open(config) as c:
         params = yaml.load(c, Loader = yaml.FullLoader)
 
+    print("=================================================")
+    print("START PARSING CONFIG")
     parser = Parser(params)
     sys.stdout.flush()
     viz_engine  = Visualization(params)
