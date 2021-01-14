@@ -69,6 +69,7 @@ def vis(output, style, table, path):
     REQUIRED ARGS:
         output: output file from tps software
         style: style file for cytoscpe 
+        vis(OUTPUT_FILE, outStyleFile, REFACTORED_ANNOTATIONS, SAVE_FILE)
     """
 
     # create cyrest client

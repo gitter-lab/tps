@@ -139,10 +139,10 @@ def PrepTemporalCytoscapeTPS(peptideMapFile, timeSeriesFile, peptideFirstScoreFi
 
             timeSeriesMin = min(timeSeriesMin, min(timeSeriesMinq))
             timeSeriesMax = max(timeSeriesMax, max(timeSeriesMaxq))
-            timeSeries = ", ".join(map(str, timeSeries))
+            timeSeries = "|".join(map(str, timeSeries))
 
             if addZero:
-                timeSeries = "0.0, " + timeSeries
+                timeSeries = "0.0|" + timeSeries
 
             # All peptide time series are added to the "all" map
             prot2TimeSeries["all"][prot].append(timeSeries)

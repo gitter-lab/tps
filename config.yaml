@@ -1,6 +1,3 @@
-Cytoscape: 
-    path: C:\Users\ajshe\OneDrive\Documents\Comp_bio\Cytoscape_v3.7.1 
-    session: "tps_session_test.cys"
 TPS:
     required:
         network: data/networks/input-network.tsv
@@ -9,7 +6,7 @@ TPS:
         prevscores: data/timeseries/p-values-prev.tsv
         source: EGF_HUMAN
         threshold: 0.01
-        outlabel: "test-refactor"     # Required 
+        outlabel: "test-runner-full"     # Required 
     optional:
         partialmodel: data/resources/kinase-substrate-interactions.sif
         peptidemap: data/timeseries/peptide-mapping.tsv
@@ -29,8 +26,12 @@ Annotations:
     pvalThresh: 0.01
     logTransform: False
     styleTemplateFile: data/templates/tps_style_template.xml
-    outAnnotFile: "test-annot"
+    outAnnotFile: "test-annot-full.txt"
     outStyleFile: "style_output.xml"
     addZero: True           # default
     logDefault: -1.0        # default
     repairMissing: False    # default
+Cytoscape: 
+    path: C:\Users\ajshe\OneDrive\Documents\Comp_bio\Cytoscape_v3.7.1 
+    session: "tps_session_full.cys"
+    name: "Cytoscape.exe"
