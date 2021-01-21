@@ -27,8 +27,9 @@ class Runner:
                 stderr=subprocess.PIPE,
                 check=True
             )
-        except Exception:
-            print("Error: Invalid Build")
+        except Exception as e:
+            print("as error has occured while trying to run TPS")
+            print(e)
 
         self.output_files = self.__check_outputs()
         return self
