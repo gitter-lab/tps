@@ -23,8 +23,6 @@ class Runner:
         try:
             subprocess.run(
                 self.workflow_runner.build,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
                 check=True
             )
         except Exception as e:
@@ -46,7 +44,6 @@ class Runner:
             for file in outputs:
                 if not os.path.exists(file):
                     raise Exception("output file {} was not generated, check TPS build".format(file))
-                print(f'output file {file} was generated')
                 
             files = {'activity-windows': os.path.join(_out_folder, _out_label+'-activity-windows.tsv'),
                 'network-file': os.path.join(_out_folder, _out_label+'-output.sif'),
