@@ -1,6 +1,10 @@
+'''
+Design inspired by 
+https://github.com/Murali-group/Beeline/blob/master/BLRun/__init__.py
+
+'''
 import yaml
 import os
-from typing import Dict, List
 
 # define defaults to be used during initialization
 OUT_LABEL = ""
@@ -30,6 +34,15 @@ class TPSSettings(object):
         self.optional = optional
         self.flags = flags
         self.output_label = required['outlabel']
+        self.args = self.__parse_input_settings()
+
+    def __parse_input_settings(self):
+        filtered_ags = {**self.required, 
+                    **self.optional}
+        args = {key:val for key, val in filtered_ags.items()
+                    if filtered_ags[key] != 'None'}
+        return args
+
 
 class AnnotationsSettings(object):
     '''
@@ -64,30 +77,22 @@ class WorkflowRun(object):
     def __build_tps_inputs(self, tps_input_settings):
         build = []
         build.extend(["bash", "./scripts/run"])
-        filtered_ags = {**tps_input_settings.required, 
-                    **tps_input_settings.optional}
-        args = {key:val for key, val in filtered_ags.items()
-                    if filtered_ags[key] != DEFAULT}
-
-        for key, val in args.items():
+        for key, val in self.tps_input_settings.args.items():
             k = "--" + key
             build.extend([k, str(val)])
         if tps_input_settings.flags is not None:
             build.extend(tps_input_settings.flags)
-
         print(build)
         return build
 
     def __get_out_folder(self):
         check = 'outfolder'
-        if check in self.build:
-            out_folder = build[check]
+        if check in self.tps_input_settings.args:
+            print(f'outfolder provided: {self.tps_input_settings.args[check]}')
+            out_folder = self.tps_input_settings.args[check]
         else:
             out_folder = OUT_FOLDER
         return out_folder
-
-
-    
 
 class ConfigParser(object):
     '''
@@ -116,8 +121,8 @@ class ConfigParser(object):
     @staticmethod
     def __parse_tps_settings(tps_settings_map):
         required = tps_settings_map['required']
-        optional = tps_settings_map['optional']
-        flags = tps_settings_map['flags']
+        optional = tps_settings_map.get('optional', [])
+        flags = tps_settings_map.get('flags', [])
 
         return TPSSettings(required, optional, flags)
 

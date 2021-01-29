@@ -6,15 +6,15 @@ TPS:
         prevscores: data/timeseries/p-values-prev.tsv
         source: EGF_HUMAN
         threshold: 0.01
-        outlabel: "test-runner-full"     # Required 
+        outlabel: "test-runner-full" 
     optional:
         partialmodel: data/resources/kinase-substrate-interactions.sif
         peptidemap: data/timeseries/peptide-mapping.tsv
-        outfolder: <value-here>          # default: None (tps root directory)
-        solver: <value-here>
-        slack: <value-here>
-        bitvect: <value-here>
-    flags: #[no-connectivity, no-temporality, no-monotonicity]
+        outfolder: None          # default: None (tps root directory)
+        solver: None
+        slack: None
+        bitvect: None
+    flags: #[--no-connectivity, --no-temporality, --no-monotonicity]
 Annotations:
     peptideMapFile: data/timeseries/peptide-mapping.tsv
     timeSeriesFile: data/timeseries/log2-fold-change.txt

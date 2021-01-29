@@ -1,13 +1,7 @@
 import yaml
 import argparse
-import itertools
-import os
-import pandas as pd
-import sys
-
-
-import TPSWorkflow as tps
-from TPSWorkflow.runner import Runner, Annotations, Visualize
+import workflow as tps
+from workflow.runner import Runner, Annotations, Visualize
 
 yaml.warnings({'YAMLLoadWarning': False})
 
@@ -54,7 +48,7 @@ def main():
             runner
         ).generate_annotations()
 
-        cytoscape = Visualize(
+        Visualize(
             evaluation.cytoscape_input_settings,
             runner,
             annotations

@@ -3,7 +3,8 @@ import glob
 import sys
 import os
 import time
-from workflow.table_generation import PrepTemporalCytoscapeTPS
+import psutil
+from workflow.utilities import PrepTemporalCytoscapeTPS
 from requests.exceptions import ConnectionError
 from requests.exceptions import HTTPError
 from json.decoder import JSONDecodeError
@@ -71,6 +72,8 @@ class Annotations:
         self.out_style_file = os.path.join(self.out_folder, self.annot_input_settings['outStyleFile'])
 
     def generate_annotations(self):
+        print("in annot generation")
+        print(f"output folder: {self.out_folder}")
         PrepTemporalCytoscapeTPS(
             self.annot_input_settings['peptideMapFile'],
             self.annot_input_settings['timeSeriesFile'],
@@ -106,23 +109,17 @@ class Visualize:
                 runner: Runner, annotations: Annotations):
         self.cytoscape_input_settions = cytoscape_input_settings
         self.runner = runner
-        self.save_file = os.path.join(
+        self.save_file = os.path.abspath(os.path.join(
             self.runner.workflow_runner.out_folder, self.cytoscape_input_settions.session
-        )
+        ))
         self.annotations = annotations
         self.data_types = "s,s,b,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl"
     
     def __process_exists(self, process_name):
-        bytes_name = str.encode(process_name)
-        call = 'TASKLIST', '/FI', 'imagename eq %s' % process_name
 
-        # use buildin check_output right away
-        output = subprocess.check_output(call)
-
-        # check in last line for process name
-        last_line = output.strip().split(b'\r\n')[-1]
-
-        return last_line.lower().startswith(bytes_name.lower())
+        if process_name in (p.name() for p in psutil.process_iter()):
+            return True
+        return False
 
     def __find_path(self, name, path):
         result = []
@@ -130,25 +127,30 @@ class Visualize:
             if name in files:
                 result.append(os.path.join(root, name))
                 break
+        if not result:
+            print(f'Cytoscape path: {path} not valid')
+            return None
         return result[0]
     
     def __visualize_outputs(self):
+        _annot_file = os.path.abspath(self.annotations.out_annot_file)
+        _style_file = os.path.abspath(self.annotations.out_style_file)
+
         cyclient = cyrest.cyclient()
         cy = CyRestClient()
         #cy.session.delete()
         cy.network.create_from(self.runner.output_files['network-file'])
         time.sleep(2)
-        style = cyclient.vizmap.load_file(self.annotations.out_style_file)
+        style = cyclient.vizmap.load_file(_style_file)
         cyclient.vizmap.apply(style[0])
         cyclient.table.import_file(
-            afile=self.annotations.out_annot_file,
+            afile=_annot_file,
             firstRowAsColumnNames=True,
             keyColumnIndex='1',
             startLoadRow='0',
             dataTypeList= self.data_types
         )
         cyclient.session.save_as(session_file=self.save_file)
-
 
     def check_cytpscape(self):
         check = self.__process_exists(self.cytoscape_input_settions.name)
@@ -168,7 +170,7 @@ class Visualize:
         start = time.time()
         while switch is False:
             try:
-                print("try visualize")
+                print("loading tps and annotation outputs ... ")
                 self.__visualize_outputs()
                 switch = True
             except ConnectionError as e:

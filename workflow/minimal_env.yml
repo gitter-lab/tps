@@ -1,4 +1,4 @@
-name: py2cyto_environment
+name: tps_workflow_env
 channels:
   - conda-forge
   - defaults
@@ -12,5 +12,7 @@ dependencies:
   - python-igraph=0.8.0
   - requests=2.23
   - pip=20.0
+  - psutil
+  - pyyaml
   - pip:
       - py2cytoscape==0.7.1
