@@ -19,7 +19,7 @@ jobs:
           environment-file: pcsf/environment.yml
           auto-activate-base: false
           auto-update-conda: false
-          miniconda-version: 4.0.5
+          miniconda-version: 'latest'
       # Run the PCSF tests in the pcsf conda environment
       - name: Test PCSF
         shell: bash --login {0}
