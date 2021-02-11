@@ -1,0 +1,45 @@
+name: Test TPS
+on:
+- push
+- pull_request
+jobs:
+  pcsf:
+    name: Test PCSF
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install conda environment
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: pcsf
+          environment-file: pcsf/environment.yml
+          auto-activate-base: false
+          miniconda-version: 'latest'
+      # Run the PCSF tests in the pcsf conda environment
+      - name: Test PCSF
+        shell: bash --login {0}
+        run: pytest pcsf/tests/
+  workflow:
+    name: Test TPS workflow
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install conda environment
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: tps_workflow
+          environment-file: workflow/minimal_env.yml
+          auto-activate-base: false
+          miniconda-version: 'latest'
+      # Run the workflow tests
+      - name: Test workflow
+        shell: bash --login {0}
+        run: pytest workflow/tests/
