@@ -21,14 +21,14 @@ class Runner:
         self.workflow_runner = workflow_runner
 
     def run_tps(self):
+        print(os.getcwd())
         try:
             subprocess.run(
                 self.workflow_runner.build,
                 check=True
             )
-        except Exception as e:
-            print("as error has occured while trying to run TPS")
-            print(e)
+        except subprocess.CalledProcessError as e:
+            print("an error has occured while trying to run TPS")
 
         self.output_files = self.__check_outputs()
         return self

@@ -1,4 +1,4 @@
-name: tps_workflow_env
+name: tps_workflow
 channels:
   - conda-forge
   - defaults
