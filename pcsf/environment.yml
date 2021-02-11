@@ -1,6 +1,6 @@
 name: pcsf
 channels:
-  - defaults
+  - anaconda
 dependencies:
   - python=2.7
   - networkx=1.11
