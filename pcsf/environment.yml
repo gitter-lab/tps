@@ -1,0 +1,9 @@
+name: pcsf
+channels:
+  - defaults
+dependencies:
+  - python=2.7
+  - networkx=1.11
+  - numpy=1.13
+  - pandas=0.20
+  - pytest=5.4.3
