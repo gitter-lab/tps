@@ -43,4 +43,4 @@ jobs:
       # Run the workflow tests
       - name: Test workflow
         shell: bash --login {0}
-        run: pytest workflow/tests/
+        run: pytest -vs workflow/tests/
