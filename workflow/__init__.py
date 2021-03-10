@@ -7,10 +7,10 @@ import yaml
 import os
 
 # define defaults to be used during initialization
-OUT_LABEL = ""
+OUT_LABEL = ''
 OUT_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 print(OUT_FOLDER)
-DEFAULT = "<value-here>"
+DEFAULT = '<value-here>'
 
 class CytoscapeSettings(object):
     '''
@@ -26,7 +26,7 @@ class CytoscapeSettings(object):
 
 class TPSSettings(object):
     '''
-    wrapper object for TPS settings definded in config file
+    wrapper object for TPS settings defined in config file
 
     '''
     def __init__(self, required, optional, flags):
@@ -59,7 +59,7 @@ class WorkflowRun(object):
     '''
     the WorkflowRun object is created by parsing a user-definded configuration
     file. Its methods are used to structure the inputs in an object oriented way as 
-    well as build a tps run configuration
+    well as build a TPS run configuration
 
     '''
 
@@ -75,10 +75,9 @@ class WorkflowRun(object):
         self.out_folder = self.__get_out_folder()
 
     def __build_tps_inputs(self, tps_input_settings):
-        build = []
-        build.extend(["bash", "./scripts/run"])
+        build = ['bash', './scripts/run']
         for key, val in self.tps_input_settings.args.items():
-            k = "--" + key
+            k = '--' + key
             build.extend([k, str(val)])
         if tps_input_settings.flags is not None:
             build.extend(tps_input_settings.flags)
@@ -129,6 +128,3 @@ class ConfigParser(object):
     @staticmethod
     def __parse_annotations_settings(annot_settings_map):
         return AnnotationsSettings(annot_settings_map)
-
-    
-        

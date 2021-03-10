@@ -1,27 +1,25 @@
 import os 
 import subprocess
-from py2cytoscape.data.cyrest_client import CyRestClient
-from py2cytoscape import cyrest
-import yaml
+
 
 class TestWorkflow:
 
     @classmethod
     def setup_method(self):
-        print("setup")
+        print('setup')
         self.tps_root = os.getcwd()
         self.config = os.path.join(
-            self.tps_root,'workflow','tests','test_standards', 'test_default_config.yaml'
+            self.tps_root, 'workflow', 'tests', 'test_standards', 'test_default_config.yaml'
         )
         self.tps_runner = os.path.join(self.tps_root, 'tps_runner.py')
 
     @classmethod
     def teardown_method(self):
-        print("teardown")
+        print('teardown')
 
     def test_tps(self):
-        print(f"tps_root: {self.tps_root}")
-        print(f"tps_runner: {self.tps_runner}")
+        print(f'tps_root: {self.tps_root}')
+        print(f'tps_runner: {self.tps_runner}')
         assert os.path.isfile(self.tps_runner)
         assert os.path.isdir(self.tps_root)
         call = ['python', self.tps_runner, 

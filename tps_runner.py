@@ -16,7 +16,7 @@ def get_parser() -> argparse.ArgumentParser:
 
     parser.add_argument('--config', default='config.yaml',
         help='Path to config file')
-    parser.add_argument('--execute', default='all', 
+    parser.add_argument('--execute', default='all',
         help='choose steps of workflow to execute')
 
     return parser
@@ -40,11 +40,11 @@ def main():
     with open(config_file, 'r') as conf:
         evaluation = tps.ConfigParser.parse(conf)
 
-    if rule == 'all':
+    if rule.lower() == 'all':
 
         runner = Runner(evaluation).run_tps()
         annotations = Annotations(
-            evaluation.annot_input_settings, 
+            evaluation.annot_input_settings,
             runner
         ).generate_annotations()
 
@@ -53,12 +53,12 @@ def main():
             runner,
             annotations
         ).load_cytoscape()
-    
+
     elif rule == 'annotations':
 
         runner = Runner(evaluation).run_tps()
         annotations = Annotations(
-            evaluation.annot_input_settings, 
+            evaluation.annot_input_settings,
             runner
         ).generate_annotations()
 
@@ -69,10 +69,7 @@ def main():
     else:
         print(f'rule {rule} not specified')
 
-
-
     print('Evaluation complete')
 
-
 if __name__ == '__main__':
-  main()
+    main()

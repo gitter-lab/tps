@@ -1,6 +1,5 @@
 import subprocess
 import glob
-import sys
 import os
 import time
 import psutil
@@ -28,13 +27,13 @@ class Runner:
                 check=True
             )
         except subprocess.CalledProcessError as e:
-            print("an error has occured while trying to run TPS")
+            print('an error has occurred while trying to run TPS')
 
         self.output_files = self.__check_outputs()
         return self
 
     def __check_outputs(self):
-        print("check output", self.workflow_runner.out_folder)
+        print('check output', self.workflow_runner.out_folder)
         outputs = glob.glob(self.workflow_runner.out_folder + 
             f'*\{self.workflow_runner.tps_input_settings.output_label}*', recursive=False)
 
@@ -44,14 +43,14 @@ class Runner:
         try:
             for file in outputs:
                 if not os.path.exists(file):
-                    raise Exception("output file {} was not generated, check TPS build".format(file))
+                    raise Exception('output file {} was not generated, check TPS build'.format(file))
                 
             files = {'activity-windows': os.path.join(_out_folder, _out_label+'-activity-windows.tsv'),
                 'network-file': os.path.join(_out_folder, _out_label+'-output.sif'),
                 'network-file-data': os.path.join(_out_folder, _out_label+'-output.tsv'),
                 'temporal-interpretation': os.path.join(_out_folder, _out_label+'-temporal-interpretation.tsv')}
         except Exception:
-            print('error has occured after run')
+            print('error has occurred after run')
         
         return files
 
@@ -72,8 +71,8 @@ class Annotations:
         self.out_style_file = os.path.join(self.out_folder, self.annot_input_settings['outStyleFile'])
 
     def generate_annotations(self):
-        print("in annot generation")
-        print(f"output folder: {self.out_folder}")
+        print('in annot generation')
+        print(f'output folder: {self.out_folder}')
         PrepTemporalCytoscapeTPS(
             self.annot_input_settings['peptideMapFile'],
             self.annot_input_settings['timeSeriesFile'],
@@ -107,13 +106,13 @@ class Visualize:
     '''
     def __init__(self, cytoscape_input_settings,
                 runner: Runner, annotations: Annotations):
-        self.cytoscape_input_settions = cytoscape_input_settings
+        self.cytoscape_input_settings = cytoscape_input_settings
         self.runner = runner
         self.save_file = os.path.abspath(os.path.join(
-            self.runner.workflow_runner.out_folder, self.cytoscape_input_settions.session
+            self.runner.workflow_runner.out_folder, self.cytoscape_input_settings.session
         ))
         self.annotations = annotations
-        self.data_types = "s,s,b,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl"
+        self.data_types = 's,s,b,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl'
     
     def __process_exists(self, process_name):
 
@@ -148,18 +147,18 @@ class Visualize:
             firstRowAsColumnNames=True,
             keyColumnIndex='1',
             startLoadRow='0',
-            dataTypeList= self.data_types
+            dataTypeList=self.data_types
         )
         cyclient.session.save_as(session_file=self.save_file)
 
     def check_cytpscape(self):
-        check = self.__process_exists(self.cytoscape_input_settions.name)
+        check = self.__process_exists(self.cytoscape_input_settings.name)
 
-        if check == False:
-            path = self.__find_path(self.cytoscape_input_settions.name, self.cytoscape_input_settions.path)
+        if not check:
+            path = self.__find_path(self.cytoscape_input_settings.name, self.cytoscape_input_settings.path)
             subprocess.Popen(path)
         else:
-            print("Cytoscape already running")
+            print('Cytoscape already running')
 
     def load_cytoscape(self):
         self.check_cytpscape()
@@ -168,9 +167,9 @@ class Visualize:
         http_count = 0
         switch = False
         start = time.time()
-        while switch is False:
+        while not switch:
             try:
-                print("loading tps and annotation outputs ... ")
+                print('loading tps and annotation outputs ... ')
                 self.__visualize_outputs()
                 switch = True
             except ConnectionError as e:
@@ -187,14 +186,4 @@ class Visualize:
                 continue
         end = time.time()
 
-        print(f"time elapsed: {end-start}")
-
-
-
-
-
-
-
-    
-
-        
+        print(f'time elapsed: {end-start}')
