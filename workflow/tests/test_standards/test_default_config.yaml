@@ -1,0 +1,37 @@
+TPS:
+    required:
+        network: data/networks/input-network.tsv
+        timeseries: data/timeseries/median-time-series.tsv
+        firstscores: data/timeseries/p-values-first.tsv
+        prevscores: data/timeseries/p-values-prev.tsv
+        source: EGF_HUMAN
+        threshold: 0.01
+        outlabel: "test-runner-full" 
+    optional:
+        partialmodel: data/resources/kinase-substrate-interactions.sif
+        peptidemap: data/timeseries/peptide-mapping.tsv
+        outfolder: None          # default: None (tps root directory)
+        solver: None
+        slack: None
+        bitvect: None
+    flags: #[--no-connectivity, --no-temporality, --no-monotonicity]
+Annotations:
+    peptideMapFile: data/timeseries/peptide-mapping.tsv
+    timeSeriesFile: data/timeseries/log2-fold-change.txt
+    peptideFirstScores: data/timeseries/p-values-first.tsv
+    peptidePrevScoreFile: data/timeseries/p-values-prev.tsv
+    windowsFile: "output_placeholder"
+    networkFile: "output_placeholder"
+    goldStandardFile: data/resources/eight-egfr-reference-all.txt
+    pvalThresh: 0.01
+    logTransform: False
+    styleTemplateFile: data/templates/tps_style_template.xml
+    outAnnotFile: "test-annot-full.txt"
+    outStyleFile: "style_output.xml"
+    addZero: True           # default
+    logDefault: -1.0        # default
+    repairMissing: False    # default
+Cytoscape: 
+    path: ~?/path/to/Cytoscape.exe 
+    session: "tps_session_full.cys"
+    name: "Cytoscape.exe"

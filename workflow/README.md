@@ -25,7 +25,7 @@ The TPS/workflow module utilizes the TPS repository structure in order to run th
 - `table_refactor.py`
   - helper methods of reformatting annotations data
 
-- `table_generation.py`
+- `utilities.py`
   - helper methods for combining data sources to prepare annotations table for proteins that can be imported into Cytoscape
 
 

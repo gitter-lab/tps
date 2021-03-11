@@ -1,0 +1,7 @@
+name: pcsf
+dependencies:
+  - python=2.7
+  - networkx=1.11
+  - numpy=1.13
+  - pandas=0.24
+  - pytest=4.6

@@ -3,7 +3,7 @@
 Utility functions for processing time series proteomic data.
 Created on 2020-01-12
 
-editited (for python 3) by Adam Shedivy 2020-05-22
+edited (for Python 3) by Adam Shedivy 2020-05-22
 
 @author: Anthony Gitter
 """
@@ -139,10 +139,10 @@ def PrepTemporalCytoscapeTPS(peptideMapFile, timeSeriesFile, peptideFirstScoreFi
 
             timeSeriesMin = min(timeSeriesMin, min(timeSeriesMinq))
             timeSeriesMax = max(timeSeriesMax, max(timeSeriesMaxq))
-            timeSeries = ", ".join(map(str, timeSeries))
+            timeSeries = "|".join(map(str, timeSeries))
 
             if addZero:
-                timeSeries = "0, " + timeSeries
+                timeSeries = "0.0|" + timeSeries
 
             # All peptide time series are added to the "all" map
             prot2TimeSeries["all"][prot].append(timeSeries)
@@ -399,13 +399,13 @@ def RobustLog2(val, default):
 # Copied from generate_prizes.py in TPS codebase
 # Sets a cap on the maximum prize by mapping p-values below 1E-10 to 1E-10
 # This allows for p-values that are not real p-values but rather fold change
-# threhsolds that were mapped to 0 or 1 "p-values"
+# thresholds that were mapped to 0 or 1 "p-values"
 
 
 def LoadScores(firstfile, prevfile):
     """Load the first and previous scores.  For each peptide, compute a prize
     that is -log10(min p-value across all time points).  Assumes the scores
-    are p-values or equivalaent scores in (0, 1].  p-values < 1E-10 are mapped
+    are p-values or equivalent scores in (0, 1].  p-values < 1E-10 are mapped
     to 1E-10.  Do not allow null or missing scores.
 
     Return: data frame with scores and prize for each peptide
