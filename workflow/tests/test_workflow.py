@@ -6,16 +6,11 @@ class TestWorkflow:
 
     @classmethod
     def setup_method(self):
-        print('setup')
         self.tps_root = os.getcwd()
         self.config = os.path.join(
             self.tps_root, 'workflow', 'tests', 'test_standards', 'test_default_config.yaml'
         )
         self.tps_runner = os.path.join(self.tps_root, 'tps_runner.py')
-
-    @classmethod
-    def teardown_method(self):
-        print('teardown')
 
     def test_tps(self):
         print(f'tps_root: {self.tps_root}')

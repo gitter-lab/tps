@@ -20,7 +20,6 @@ class Runner:
         self.workflow_runner = workflow_runner
 
     def run_tps(self):
-        print(os.getcwd())
         try:
             subprocess.run(
                 self.workflow_runner.build,
@@ -71,7 +70,6 @@ class Annotations:
         self.out_style_file = os.path.join(self.out_folder, self.annot_input_settings['outStyleFile'])
 
     def generate_annotations(self):
-        print('in annot generation')
         print(f'output folder: {self.out_folder}')
         PrepTemporalCytoscapeTPS(
             self.annot_input_settings['peptideMapFile'],

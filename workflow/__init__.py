@@ -7,9 +7,7 @@ import yaml
 import os
 
 # define defaults to be used during initialization
-OUT_LABEL = ''
-OUT_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-print(OUT_FOLDER)
+DEFAULT_OUT_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT = '<value-here>'
 
 class CytoscapeSettings(object):
@@ -81,7 +79,6 @@ class WorkflowRun(object):
             build.extend([k, str(val)])
         if tps_input_settings.flags is not None:
             build.extend(tps_input_settings.flags)
-        print(build)
         return build
 
     def __get_out_folder(self):
@@ -90,7 +87,7 @@ class WorkflowRun(object):
             print(f'outfolder provided: {self.tps_input_settings.args[check]}')
             out_folder = self.tps_input_settings.args[check]
         else:
-            out_folder = OUT_FOLDER
+            out_folder = DEFAULT_OUT_FOLDER
         return out_folder
 
 class ConfigParser(object):

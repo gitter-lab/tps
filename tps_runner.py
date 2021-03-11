@@ -16,7 +16,9 @@ def get_parser() -> argparse.ArgumentParser:
 
     parser.add_argument('--config', default='config.yaml',
         help='Path to config file')
-    parser.add_argument('--execute', default='all',
+    parser.add_argument('--execute', 
+        default='all',
+        choices=['all', 'tps', 'annotations'],
         help='choose steps of workflow to execute')
 
     return parser

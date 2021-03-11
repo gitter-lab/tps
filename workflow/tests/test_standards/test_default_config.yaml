@@ -32,6 +32,6 @@ Annotations:
     logDefault: -1.0        # default
     repairMissing: False    # default
 Cytoscape: 
-    path: C:\Users\ajshe\OneDrive\Documents\Comp_bio\Cytoscape_v3.7.1 
+    path: ~?/path/to/Cytoscape.exe 
     session: "tps_session_full.cys"
     name: "Cytoscape.exe"
