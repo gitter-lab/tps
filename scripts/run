@@ -3,8 +3,10 @@
 sbtscript=./scripts/sbt
 
 if [ ! -f $sbtscript ]; then
+  echo "----start downloading sbt"
   echo "downloading sbt" 1>&2
   ./scripts/get-sbt
 fi
 
+echo "----sbt downloaded"
 $sbtscript "project core" "runMain tps.Main $*"

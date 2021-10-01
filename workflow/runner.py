@@ -127,6 +127,7 @@ class Visualize:
         if not result:
             print(f'Cytoscape path: {path} not valid')
             return None
+        print(result)
         return result[0]
     
     def __visualize_outputs(self):
@@ -154,6 +155,7 @@ class Visualize:
 
         if not check:
             path = self.__find_path(self.cytoscape_input_settings.name, self.cytoscape_input_settings.path)
+            print(path)
             subprocess.Popen(path)
         else:
             print('Cytoscape already running')
