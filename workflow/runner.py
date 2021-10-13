@@ -2,6 +2,7 @@ import subprocess
 import glob
 import os
 import time
+import sys
 import psutil
 from workflow.utilities import PrepTemporalCytoscapeTPS
 from requests.exceptions import ConnectionError
@@ -20,6 +21,7 @@ class Runner:
         self.workflow_runner = workflow_runner
 
     def run_tps(self):
+        print(self.workflow_runner.build)
         try:
             subprocess.run(
                 self.workflow_runner.build,

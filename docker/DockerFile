@@ -33,4 +33,4 @@ COPY docker/tests/connect_cytoscape.py /tests/connect_cytoscape.py
 COPY docker/tests/connect.sh /tests/connect.sh
 
 EXPOSE 1234 5900
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord > /dev/null 2>&1"]
