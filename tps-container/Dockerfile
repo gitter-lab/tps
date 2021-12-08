@@ -9,9 +9,6 @@ COPY scripts/ /tps/scripts
 COPY tps-core/ /tps/tps-core
 COPY project/ /tps/project
 COPY build.sbt /tps/build.sbt
-COPY workflow/ /tps/workflow
-COPY tps_runner.py /tps/tps_runner.py
-COPY workflow.sh /tps/workflow.sh
 
 WORKDIR /tps
 RUN ./scripts/run --help
