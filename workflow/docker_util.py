@@ -59,7 +59,6 @@ def hash_params_sha1_base32(params_dict: Dict[str, Any], length: Optional[int] =
         return params_base32[:length]
 
 class DockerClient(object):
-
     def __init__(self, client: str, 
                 workflow_settings: Optional[WorkflowRun] = None, 
                 cytoscape: Optional[Visualize] = None) -> None:
@@ -67,7 +66,7 @@ class DockerClient(object):
         self.client_name = client
         self.client = CLIENTS[client]
         self.workflow_runner = workflow_settings
-        self.outfolder =workflow_settings.out_folder
+        self.outfolder = workflow_settings.out_folder
         self.cytoscape = cytoscape
         self.DOCKER_SETTINGS = {
             'TPS'       : self.prepare_tps,
