@@ -8,3 +8,4 @@ if [ ! -f $sbtscript ]; then
 fi
 
 $sbtscript "project core" "runMain tps.Main $*"
+

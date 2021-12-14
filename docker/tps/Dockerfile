@@ -5,10 +5,11 @@ RUN apt-get update && apt-get -y install default-jdk curl
 # Set JAVA_HOME From sudo update-alternatives --config java
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 
-COPY scripts/   /tps/scripts
-COPY tps-core/  /tps/tps-core
-COPY project/   /tps/project
-COPY build.sbt  /tps/build.sbt
+COPY scripts/get-sbt /tps/scripts/get-sbt
+COPY scripts/run /tps/scripts/run
+COPY tps-core/ /tps/tps-core
+COPY project/ /tps/project
+COPY build.sbt /tps/build.sbt
 
 WORKDIR /tps
 RUN ./scripts/run --help
