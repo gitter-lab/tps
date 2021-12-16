@@ -10,7 +10,7 @@ from workflow.runner import *
 
 
 CLIENTS = {
-    'TPS'       : 'ajshedivy/tps-sbt',
+    'TPS'       : 'ajshedivy/tps',
     'CYTOSCAPE' : 'ajshedivy/tps-cytoscape'
 }
 
