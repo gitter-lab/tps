@@ -15,7 +15,7 @@ from requests.models import Response
 ##########################################################################################################
 ##########################################################################################################
 '''
-The following functions are a unique implementation for hadndling Cytoscape 
+The following functions are a unique implementation for handling Cytoscape 
 requests and responses
 
 based off:
