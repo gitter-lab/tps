@@ -1,3 +1,11 @@
+'''
+The Following is derived from py2cytoscape.cyrest.base which implements
+a RESTful api client for Cytoscape
+
+Citation:
+    Ono, K. et al. (2015) CyREST: Turbocharging Cytoscape Access for External Tools via a RESTful API. F1000Res, 4, 478
+
+'''
 from py2cytoscape import cyrest
 from requests.exceptions import ConnectionError
 import time
@@ -20,7 +28,7 @@ requests and responses
 
 based off:
     py2cytoscape.cyrest
-    py2cytoscape.base
+    py2cytoscape.cyrest.base
 
 '''
 
@@ -210,7 +218,6 @@ def _status(cyrest_client, host, port, verbose=False):
 def check_cyrest(port):
     print('start supervisord client')
     try:
-        
         subprocess.run([
             "/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"
         ],
@@ -237,6 +244,12 @@ def check_cyrest(port):
             print(e)
             sys.exit()
 
+
+class CyClient:
+
+    def __init__(self, cytoscape_settings,
+                tps_settings, annot_settings) -> None:
+        pass
 
 if __name__ == '__main__':
     check_cyrest(1234)

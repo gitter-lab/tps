@@ -14,6 +14,7 @@ from py2cytoscape.data.cyrest_client import CyRestClient
 from py2cytoscape import cyrest
 from typing import Dict, Any
 
+import connect_cytoscape 
 from workflow import CYTOSCAPE_DATATYPES
 
 class Runner(object):
@@ -167,6 +168,12 @@ class Visualize:
         check = self.__process_exists(self.cytoscape_input_settings.name)
 
         if not check:
+            print(self.cytoscape_input_settings.path)
+            if os.path.exists(self.cytoscape_input_settings.path):
+                print('exists')
+            else:
+                print('dne')
+                sys.exit()
             path = self.__find_path(self.cytoscape_input_settings.name, self.cytoscape_input_settings.path)
             print(path)
             subprocess.Popen(path)
@@ -200,8 +207,3 @@ class Visualize:
         end = time.time()
 
         print(f'time elapsed: {end-start}')
-
-
-class Testclass:
-    def __init__(self) -> None:
-        pass

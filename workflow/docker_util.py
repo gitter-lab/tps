@@ -11,7 +11,7 @@ from workflow.runner import *
 
 CLIENTS = {
     'TPS'       : 'ajshedivy/tps',
-    'CYTOSCAPE' : 'ajshedivy/tps-cytoscape'
+    'CYTOSCAPE' : 'ajshedivy/cytoscape'
 }
 
 
@@ -63,11 +63,11 @@ class DockerClient(object):
                 workflow_settings: Optional[WorkflowRun] = None, 
                 cytoscape: Optional[Visualize] = None) -> None:
 
-        self.client_name = client
-        self.client = CLIENTS[client]
+        self.client_name     = client
+        self.client          = CLIENTS[client]
         self.workflow_runner = workflow_settings
-        self.outfolder = workflow_settings.out_folder
-        self.cytoscape = cytoscape
+        self.outfolder       = workflow_settings.out_folder
+        self.cytoscape       = cytoscape
         self.DOCKER_SETTINGS = {
             'TPS'       : self.prepare_tps,
             'CYTOSCAPE'  : self.prepare_cytoscape
@@ -110,8 +110,9 @@ class DockerClient(object):
             del check_build['--outfolder']
             self.workflow_runner.build = list(functools.reduce(lambda x, y: x+y, check_build.items()))
 
-        hash_val = hash_params_sha1_base32(self.workflow_runner.build, length=DEFAULT_HASH_LENGTH)
+        hash_val         = hash_params_sha1_base32(self.workflow_runner.build, length=DEFAULT_HASH_LENGTH)
         self.output_tag_ = DOCKER_OUTFOLDER.format(hash_val)
+
         self.workflow_runner.build.extend(['--outfolder', self.output_tag_])
         self.workflow_runner.out_folder = self.output_tag_
 
@@ -129,14 +130,14 @@ class DockerClient(object):
             'container_wdir':None,
         }
 
-        work_dir = Path(__file__).parent.parent.absolute()
-        data_path = prepare_path_docker(work_dir)+'/data'
+        work_dir    = Path(__file__).parent.parent.absolute()
+        data_path   = prepare_path_docker(work_dir)+'/data'
         output_path = prepare_path_docker(work_dir)+'/'+self.output_tag_
         print(output_path)
         
         container_settings['work_dir'] = work_dir
-        container_settings['command'] = self.workflow_runner.build
-        container_settings['volumes'] = {
+        container_settings['command']  = self.workflow_runner.build
+        container_settings['volumes']  = {
             data_path : {'bind': '/tps/data', 'mode': 'rw'},
             output_path : {'bind': '/tps/'+self.output_tag_, 'mode': 'rw'}
         }
@@ -146,7 +147,15 @@ class DockerClient(object):
 
 
     def prepare_cytoscape(self) -> Dict[str, Any]:
-        ...
+        """helper for preparing cytoscape container settings
+
+        requirements:
+            - output directory
+            - 
+
+        Returns:
+            Dict[str, Any]: collection of Docker Settings
+        """
 
 
     def run(self) -> None:

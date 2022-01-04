@@ -1,0 +1,37 @@
+TPS:
+    required:
+        network: <value-here>
+        timeseries: <value-here>
+        firstscores: <value-here>
+        prevscores: <value-here>
+        source: <value-here>
+        threshold: <value-here>
+        outlabel: <value-here> 
+    optional:
+        partialmodel: None
+        peptidemap: None
+        outfolder: None          # default: None (tps root directory)
+        solver: None
+        slack: None
+        bitvect: None
+    flags: #[--no-connectivity, --no-temporality, --no-monotonicity]
+Annotations:
+    peptideMapFile: <value-here>
+    timeSeriesFile: <value-here>
+    peptideFirstScores: <value-here>
+    peptidePrevScoreFile: <value-here>
+    windowsFile: "output_placeholder"       # keep this value here
+    networkFile: "output_placeholder"       # keep this value here
+    goldStandardFile: <value-here>
+    pvalThresh: <value-here>
+    logTransform: False                     # default value 
+    styleTemplateFile: <value-here>
+    outAnnotFile: <value-here>              # this value is required ex. annot.txt
+    outStyleFile: "style_output.xml"        # default output file for style specification
+    addZero: True                           # default
+    logDefault: -1.0                        # default
+    repairMissing: False                    # default
+Cytoscape: 
+    path: <value-here>                      # path to Cytoscape on local machine 
+    session: "tps_cytoscape_session.cys"    # default session name 
+    name: "Cytoscape.exe"                   # Cytoscape executable

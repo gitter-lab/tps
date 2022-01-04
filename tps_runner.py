@@ -1,6 +1,6 @@
 import yaml
 import argparse
-import workflow as tps
+import workflow
 from workflow.runner import Runner, Annotations, Visualize
 
 yaml.warnings({'YAMLLoadWarning': False})
@@ -41,33 +41,33 @@ def main():
     rule = opts.execute
 
     with open(config_file, 'r') as conf:
-        evaluation = tps.ConfigParser.parse(conf)
+        params = workflow.ConfigParser.parse(conf)
 
     if rule.lower() == 'all':
 
-        runner = Runner(evaluation).run_tps()
+        runner = Runner(params).run_tps()
         annotations = Annotations(
-            evaluation.annot_input_settings,
+            params.annot_input_settings,
             runner
         ).generate_annotations()
 
         Visualize(
-            evaluation.cytoscape_input_settings,
+            params.cytoscape_input_settings,
             runner,
             annotations
         ).load_cytoscape()
 
     elif rule == 'annotations':
 
-        runner = Runner(evaluation).run_tps()
+        runner = Runner(params).run_tps()
         annotations = Annotations(
-            evaluation.annot_input_settings,
+            params.annot_input_settings,
             runner
         ).generate_annotations()
 
     elif rule == 'tps':
 
-        runner = Runner(evaluation).run_tps()
+        runner = Runner(params).run_tps()
 
     else:
         print(f'rule {rule} not specified')
