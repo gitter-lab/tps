@@ -1,6 +1,7 @@
 name: pcsf
 dependencies:
   - python=2.7
+  - decorator=4.4.2
   - networkx=1.11
   - numpy=1.13
   - pandas=0.24
