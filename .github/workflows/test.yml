@@ -24,24 +24,54 @@ jobs:
       - name: Test PCSF
         shell: bash --login {0}
         run: pytest pcsf/tests/
-  workflow:
-    name: Test TPS workflow
+  # workflow:
+  #   name: Test TPS workflow
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest]
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v2
+  #     - name: Install conda environment
+  #       uses: conda-incubator/setup-miniconda@v2
+  #       with:
+  #         activate-environment: tps_workflow
+  #         environment-file: workflow/minimal_env.yml
+  #         auto-activate-base: false
+  #         miniconda-version: 'latest'
+  #     # Run the workflow tests
+  #     - name: Test workflow
+  #       shell: bash --login {0}
+  #       # Verbose output and disable stdout and stderr capturing
+  #       run: #pytest -vs workflow/tests/
+  docker:
+    name: Build Docker images
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
     steps:
-      - name: Checkout repository
+      - name: checkout repository
         uses: actions/checkout@v2
-      - name: Install conda environment
-        uses: conda-incubator/setup-miniconda@v2
+
+      - name: Build TPS Docker image
+        uses: docker/build-push-action@v1
         with:
-          activate-environment: tps_workflow
-          environment-file: workflow/minimal_env.yml
-          auto-activate-base: false
-          miniconda-version: 'latest'
-      # Run the workflow tests
-      - name: Test workflow
-        shell: bash --login {0}
-        # Verbose output and disable stdout and stderr capturing
-        run: pytest -vs workflow/tests/
+          path: .
+          dockerfile: docker/tps/Dockerfile
+          repository: ajshedivy/tps
+          tags: latest
+          cache_froms: ajshedivy/tps:latest
+          push: false
+      - name: Build Cytoscape Docker image
+        uses: docker/build-push-action@v1
+        with:
+          path: .
+          dockerfile: docker/cytoscape/Dockerfile
+          repository: ajshedivy/cytoscape
+          tags: latest
+          cache_froms: ajshedivy/cytoscape:latest
+          push: false
+      
+
