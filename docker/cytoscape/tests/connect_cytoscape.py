@@ -1,6 +1,8 @@
 '''
-The Following is derived from py2cytoscape.cyrest.base which implements
-a RESTful api client for Cytoscape
+The following is derived from py2cytoscape.cyrest.base, 
+https://github.com/cytoscape/py2cytoscape, which implements a RESTful API
+client for Cytoscape available under the MIT License, Copyright (c) 2014-2015
+University of California, San Diego Trey Ideker Lab
 
 Citation:
     Ono, K. et al. (2015) CyREST: Turbocharging Cytoscape Access for External Tools via a RESTful API. F1000Res, 4, 478
