@@ -53,7 +53,7 @@ jobs:
       - name: Test workflow
         shell: bash --login {0}
         # Verbose output and disable stdout and stderr capturing
-        run: pytest -vs tests/
+        run: pytest -vs workflow/tests/
   docker:
     name: Build Docker images
     runs-on: ${{ matrix.os }}
