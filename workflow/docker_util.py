@@ -16,13 +16,15 @@ CLIENTS = {
 
 
 DEFAULT_HASH_LENGTH = 7
-DOCKER_OUTFOLDER    = "output/output-{}"
+DOCKER_OUTFOLDER    = "output/"
 
 def prepare_path_docker(orig_path: PurePath) -> str:
     """
     Prepare an absolute path for mounting as a Docker volume.
     Converts Windows file separators to posix separators.
     Converts Windows drive letters in absolute paths.
+
+    Source: https://github.com/Reed-CompBio/spras
     """
     # TODO consider testing PurePath.is_absolute()
     prepared_path = orig_path.as_posix()
@@ -110,8 +112,7 @@ class DockerClient(object):
             del check_build['--outfolder']
             self.workflow_runner.build = list(functools.reduce(lambda x, y: x+y, check_build.items()))
 
-        hash_val         = hash_params_sha1_base32(self.workflow_runner.build, length=DEFAULT_HASH_LENGTH)
-        self.output_tag_ = DOCKER_OUTFOLDER.format(hash_val)
+        self.output_tag_ = DOCKER_OUTFOLDER
 
         self.workflow_runner.build.extend(['--outfolder', self.output_tag_])
         self.workflow_runner.out_folder = self.output_tag_

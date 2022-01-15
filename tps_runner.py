@@ -4,7 +4,6 @@ import workflow
 from workflow.runner import Runner, Annotations, Visualize
 
 yaml.warnings({'YAMLLoadWarning': False})
-__CONTAINER__ = True
 
 
 def get_parser() -> argparse.ArgumentParser:
