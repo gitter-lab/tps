@@ -1,50 +1,40 @@
-import os 
+import os
+from workflow import runner
+import sys
 import subprocess
 
-
-class TestWorkflow:
+CONFIGS = {
+    'default':'default.yaml',
+    'tps-cytoscape':'tps-cytoscape.yaml',
+    'tps-no-container':'tps-no-container.yaml'
+}
+class TestWorkFlow:
 
     @classmethod
     def setup_method(self):
         self.tps_root = os.getcwd()
-        self.config = os.path.join(
-            self.tps_root, 'workflow', 'tests', 'test_standards', 'test_default_config.yaml'
-        )
-        self.tps_runner = os.path.join(self.tps_root, 'tps_runner.py')
-
-    def test_tps(self):
-        print(f'tps_root: {self.tps_root}')
-        print(f'tps_runner: {self.tps_runner}')
-        assert os.path.isfile(self.tps_runner)
-        assert os.path.isdir(self.tps_root)
-        call = ['python', self.tps_runner, 
-                '--config', self.config, '--execute', 'tps']
+        self.tps_main = os.path.join(self.tps_root, 'tps_runner.py')
+    
+    def test_workflow_default(self):
+        config = os.path.join(self.tps_root,'workflow' ,'tests', 'standards', CONFIGS['default'])
+        call = ['python', self.tps_main, 
+                '--config', config, '--execute', 'tps']
         assert subprocess.run(call, check=True).returncode == 0
 
-        outputs = [
-            os.path.join(self.tps_root, 'test-runner-full-temporal-interpretation.tsv'),
-            os.path.join(self.tps_root, 'test-runner-full-activity-windows.tsv'),
-            os.path.join(self.tps_root, 'test-runner-full-output.sif'),
-            os.path.join(self.tps_root, 'test-runner-full-output.tsv')
-        ]
-        for file in outputs:
-            assert os.path.isfile(file)
+    def test_tps_no_container(self):
+        config = os.path.join(self.tps_root, 'workflow','tests', 'standards', CONFIGS['tps-no-container'])
+        call = ['python', self.tps_main, 
+                '--config', config, '--execute', 'tps']
+        assert subprocess.run(call, check=True).returncode == 0        
 
-    def test_annotations(self):
-        call = [
-            'python', self.tps_runner, 
-            '--config', self.config, '--execute', 'annotations'
-        ]
-        assert subprocess.run(call, check=True).returncode == 0
-        outputs = [
-            os.path.join(self.tps_root, 'test-annot-full.txt'),
-            os.path.join(self.tps_root, 'style_output.xml')
-        ]
-        for file in outputs:
-            assert os.path.isfile(file)
+    # def test_cytoscape():
+    #     ...
 
-    def test_cytoscape_session(self):
-        pass
+    # def test_full():
+    #     ...
 
+    # def test_tps_container():
+    #     ...
 
-
+    # def test_cytoscape_container():
+    #     ...
