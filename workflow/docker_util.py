@@ -134,7 +134,6 @@ class DockerClient(object):
         work_dir    = Path(__file__).parent.parent.absolute()
         data_path   = prepare_path_docker(work_dir)+'/data'
         output_path = prepare_path_docker(work_dir)+'/'+self.output_tag_
-        print(output_path)
         
         container_settings['work_dir'] = work_dir
         container_settings['command']  = self.workflow_runner.build

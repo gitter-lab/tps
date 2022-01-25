@@ -23,7 +23,22 @@ class TestWorkFlow:
         config = os.path.join(self.tps_root, 'workflow','tests', 'standards', CONFIGS['tps-no-container'])
         call = ['python', self.tps_main, 
                 '--config', config, '--execute', 'tps']
-        assert subprocess.run(call, check=True).returncode == 0        
+        assert subprocess.run(call, check=True).returncode == 0
+
+    def test_tps_files(self):
+        config = os.path.join(self.tps_root,'workflow' ,'tests', 'standards', CONFIGS['default'])
+        call = ['python', self.tps_main, 
+                '--config', config, '--execute', 'tps']
+        assert subprocess.run(call, check=True).returncode == 0
+
+        outputs = [
+            os.path.join(self.tps_root, 'output', 'test-runner-full-temporal-interpretation.tsv'),
+            os.path.join(self.tps_root, 'output', 'test-runner-full-activity-windows.tsv'),
+            os.path.join(self.tps_root, 'output', 'test-runner-full-output.sif'),
+            os.path.join(self.tps_root, 'output', 'test-runner-full-output.tsv')
+        ]
+        for file in outputs:
+            assert os.path.isfile(file)  
 
     # def test_cytoscape():
     #     ...
