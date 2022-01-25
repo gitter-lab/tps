@@ -34,6 +34,7 @@ jobs:
       - name: Install conda environment
         uses: conda-incubator/setup-miniconda@v2
         with:
+          path: .
           activate-environment: tps_workflow
           environment-file: workflow/minimal_env.yml
           auto-activate-base: false
