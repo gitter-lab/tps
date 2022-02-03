@@ -156,6 +156,7 @@ class DockerClient(object):
         Returns:
             Dict[str, Any]: collection of Docker Settings
         """
+        pass
 
 
     def run(self) -> None:
