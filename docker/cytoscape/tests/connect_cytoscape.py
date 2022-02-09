@@ -8,6 +8,8 @@ Citation:
     Ono, K. et al. (2015) CyREST: Turbocharging Cytoscape Access for External Tools via a RESTful API. F1000Res, 4, 478
 
 '''
+import argparse
+from re import S
 from py2cytoscape import cyrest
 from requests.exceptions import ConnectionError
 import time
@@ -18,6 +20,9 @@ import urllib.request as urllib2
 import json
 from json import JSONDecodeError
 import subprocess
+import os
+
+from py2cytoscape.data.cyrest_client import CyRestClient
 
 from requests.models import Response
 
@@ -217,41 +222,136 @@ def _status(cyrest_client, host, port, verbose=False):
 ##########################################################################################################
        
 
-def check_cyrest(port):
-    print('start supervisord client')
-    try:
-        subprocess.run([
-            "/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"
-        ],
-        check=True)
-    except subprocess.CalledProcessError as e:
-         print('an error has occurred while trying to run TPS\n\n' + str(e))
+# def check_cyrest(port):
+#     print('start supervisord client')
+#     try:
+#         subprocess.run([
+#             "/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"
+#         ],
+#         check=True)
+#     except subprocess.CalledProcessError as e:
+#          print('an error has occurred while trying to run TPS\n\n' + str(e))
 
-    connection = False
-    while not connection:
+#     connection = False
+#     while not connection:
+#         try:
+#             print(f"try port {port}")
+#             cytoscape = cyrest.cyclient(host='localhost', port=port)
+#             status = _status(cytoscape, 'localhost', port)
+#             if not isinstance(status, requests.models.Response):
+#                 time.sleep(4)
+#             else:
+#                 if status.ok and status.status_code == 200:
+#                     connection = True
+#                     print('connection successful, exiting script')
+#                 else:
+#                     print(f"{status.status_code}")
+#                     sys.exit()
+#         except ConnectionError as e:
+#             print(e)
+#             sys.exit()
+
+
+def get_parser() -> argparse.ArgumentParser:
+    '''
+    :return: an argparse ArgumentParser object for parsing command
+        line parameters
+    '''
+    parser = argparse.ArgumentParser(
+        description='Run Cytoscape pipeline.')
+
+    parser.add_argument('--save',
+        help='cytoscape session file')
+    parser.add_argument('--style', help='style file')
+    parser.add_argument('--annot', help='annotations file')
+    parser.add_argument('--network', help='network file')
+
+    return parser
+
+def parse_arguments():
+    '''
+    Initialize a parser and use it to parse the command line arguments
+    :return: parsed dictionary of command line arguments
+    '''
+    parser = get_parser()
+    opts = parser.parse_args()
+
+    return opts
+
+class CytoscapeClient:
+
+    def __init__(self, save_file, style_file, annot_file, network_file) -> None:
+        self.save_file = save_file
+        self.style_file = style_file
+        self.annot_file = annot_file
+        self.network_file = network_file
+
+    def __visualize_outputs(self):
+        _annot_file = os.path.abspath(self.annot_file)
+        _style_file = os.path.abspath(self.style_file)
+
+        cyclient = cyrest.cyclient()
+        cy = CyRestClient()
+        #cy.session.delete()
+        cy.network.create_from(self.network_file)
+        time.sleep(2)
+        style = cyclient.vizmap.load_file(_style_file)
+        cyclient.vizmap.apply(style[0])
+        cyclient.table.import_file(
+            afile=_annot_file,
+            firstRowAsColumnNames=True,
+            keyColumnIndex='1',
+            startLoadRow='0',
+            dataTypeList=self.data_types
+        )
+        cyclient.session.save_as(session_file=self.save_file)
+
+
+    def check_cyrest(self, port):
+        print('start supervisord client')
         try:
-            print(f"try port {port}")
-            cytoscape = cyrest.cyclient(host='localhost', port=port)
-            status = _status(cytoscape, 'localhost', port)
-            if not isinstance(status, requests.models.Response):
-                time.sleep(4)
-            else:
-                if status.ok and status.status_code == 200:
-                    connection = True
-                    print('connection successful, exiting script')
+            subprocess.run([
+                "/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"
+            ],
+            check=True)
+        except subprocess.CalledProcessError as e:
+            print('an error has occurred while trying to run TPS\n\n' + str(e))
+
+        connection = False
+        attempts = 0
+
+        print(f"try port {port}")
+        while not connection:
+            try:
+                cytoscape = cyrest.cyclient(host='localhost', port=port)
+                status = _status(cytoscape, 'localhost', port)
+                if not isinstance(status, requests.models.Response):
+                    time.sleep(4)
+                    attempts+=1
                 else:
-                    print(f"{status.status_code}")
-                    sys.exit()
-        except ConnectionError as e:
-            print(e)
-            sys.exit()
+                    if status.ok and status.status_code == 200:
+                        connection = True
+                        #self.__visualize_outputs()
+                        print('connection successful, exiting script')
+                    else:
+                        print(f"{status.status_code}")
+                        sys.exit()
+            except ConnectionError as e:
+                print(e)
+                sys.exit()
+            finally:
+                sys.exit()
 
+def main():
+    opts = parse_arguments()
+    style_file = opts.style
+    save_file = opts.save
+    annot_file = opts.annot
+    network_file = opts.network
 
-class CyClient:
+    cyclient = CytoscapeClient(save_file, style_file, annot_file, network_file)
+    cyclient.check_cyrest(1234)
 
-    def __init__(self, cytoscape_settings,
-                tps_settings, annot_settings) -> None:
-        pass
 
 if __name__ == '__main__':
-    check_cyrest(1234)
+    main()

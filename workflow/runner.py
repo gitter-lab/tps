@@ -14,7 +14,7 @@ from py2cytoscape.data.cyrest_client import CyRestClient
 from py2cytoscape import cyrest
 from typing import Dict, Any
 
-from workflow import connect_cytoscape 
+from docker.cytoscape.tests import connect_cytoscape 
 from workflow import CYTOSCAPE_DATATYPES
 
 class Runner(object):
@@ -181,6 +181,11 @@ class Visualize:
             print('Cytoscape already running')
 
     def load_cytoscape(self):
+
+        if self.workflow_runner.docker_settings.use_cytoscape:
+            # docker side step
+            pass
+        
         self.check_cytpscape()
         connection_count = 0
         json_count = 0

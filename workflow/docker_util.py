@@ -151,12 +151,49 @@ class DockerClient(object):
 
         requirements:
             - output directory
-            - 
+            - style file
+            - annotations file
+            - network file
 
         Returns:
             Dict[str, Any]: collection of Docker Settings
         """
-        pass
+        self._create_output_dir()
+        container_settings = {
+            'work_dir':None,
+            'command':None,
+            'volumes': Dict[str, Dict[str, Any]],
+            'ports': Dict[str, Dict[str, Any]],
+            'container_wdir':None,
+        }
+
+        work_dir    = Path(__file__).parent.parent.absolute()
+        output_path = prepare_path_docker(work_dir)+'/'+self.output_tag_
+
+        container_settings['work_dir'] = work_dir
+        container_settings['command']  = self.build_cytoscape_command()
+        container_settings['volumes']  = {
+            output_path : {'bind': '/cytoscape/'+self.output_tag_, 'mode': 'rw'}
+        }
+
+        container_settings['ports'] = {
+            '1234' : 1234,
+            '5900' : 5900
+        }
+
+        container_settings['container_wdir'] = '/cytoscape'
+
+    def build_cytoscape_command(self):
+        command = [
+            'bash', 'connect.sh', 
+            '--save', '',
+            '--style', '',
+            '--annot', '',
+            '--network', ''
+        ]
+
+        return command
+
 
 
     def run(self) -> None:
@@ -205,6 +242,28 @@ class DockerClient(object):
         finally:
             # Not sure whether this is needed
             client.close()
+
+    def run_cytoscape(self) -> None:
+        container_settings = self.DOCKER_SETTINGS.get(
+            self.client_name, lambda: f"invalid client: {self.client}")()
+
+        client = docker.from_env()
+
+        try:
+            container_output = client.containers.run(
+                self.client,
+                container_settings['command'],
+                stderr=True,
+                volumes=container_settings['volumes'],
+                ports=container_settings['ports'],
+                working_dir=container_settings['container_wdir'])
+            print(container_output.decode('utf-8'))
+
+        finally:
+            # Not sure whether this is needed
+            client.close()
+
+
 
 
 
