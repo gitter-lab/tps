@@ -47,3 +47,14 @@ With folder `TPS/results`, a time stamped folder is created with the following f
 * Cytoscape session file
 * annotations data CSV
 * original annotations file (no refactoring)
+
+## Attribution
+`connect_cytoscape.py` is derived from `py2cytoscape.cyrest.base`, 
+https://github.com/cytoscape/py2cytoscape, which implements a RESTful API
+client for Cytoscape available under the MIT License, Copyright (c) 2014-2015
+University of California, San Diego Trey Ideker Lab.
+
+Code in `docker_util.py` is derived from https://github.com/Reed-CompBio/spras
+available under the MIT license.
+
+The Cytoscape `Dockerfile` is derived from https://github.com/cytoscape/docker-cytoscape-desktop

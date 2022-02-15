@@ -1,9 +1,8 @@
 import docker
-import sys, re, os, shutil, tempfile, hashlib, json, base64, functools
+import sys, re, os, shutil, tempfile, functools
 from pathlib import PurePath, Path
 
 from py2cytoscape import data
-from workflow import WorkflowRun
 from typing import Dict, List, Optional, Any, Type
 
 from workflow.runner import *
@@ -15,7 +14,6 @@ CLIENTS = {
 }
 
 
-DEFAULT_HASH_LENGTH = 7
 DOCKER_OUTFOLDER    = "output/"
 
 def prepare_path_docker(orig_path: PurePath) -> str:
@@ -25,6 +23,7 @@ def prepare_path_docker(orig_path: PurePath) -> str:
     Converts Windows drive letters in absolute paths.
 
     Source: https://github.com/Reed-CompBio/spras
+    Available under the MIT license
     """
     # TODO consider testing PurePath.is_absolute()
     prepared_path = orig_path.as_posix()
@@ -38,27 +37,6 @@ def prepare_path_docker(orig_path: PurePath) -> str:
         prepared_path = '//' + drive + prepared_path
     return prepared_path
 
-
-def hash_params_sha1_base32(params_dict: Dict[str, Any], length: Optional[int] = None) -> str:
-    """
-    Hash of a dictionary.
-    Derived from https://www.doc.ic.ac.uk/~nuric/coding/how-to-hash-a-dictionary-in-python.html
-    by Nuri Cingillioglu
-    Adapted to use sha1 instead of MD5 and encode in base32
-    Can be truncated to the desired length
-    @param params_dict: the algorithm parameters dictionary
-    @param length: the length of the returned hash, which is ignored if it is None, < 1, or > the full hash length
-    """
-    params_hash = hashlib.sha1()
-    params_encoded = json.dumps(params_dict, sort_keys=True).encode()
-    params_hash.update(params_encoded)
-    # base32 includes capital letters and the numbers 2-7
-    # https://en.wikipedia.org/wiki/Base32#RFC_4648_Base32_alphabet
-    params_base32 = base64.b32encode(params_hash.digest()).decode('ascii')
-    if length is None or length < 1 or length > len(params_base32):
-        return params_base32
-    else:
-        return params_base32[:length]
 
 class DockerClient(object):
     def __init__(self, client: str, 
@@ -88,11 +66,11 @@ class DockerClient(object):
             except TypeError:
                 print('not path')
 
-        temp_dir = tempfile.mkdtemp(dir=Path('data'))
+        tempfile.mkdtemp(dir=Path('data'))
 
-    def create_temporary_copy(self, path):
+    @staticmethod
+    def create_temporary_copy(path):
         temp_dir = tempfile.gettempdir()
-        print(temp_dir)
         temp_path = os.path.join(temp_dir, 'temp_file_name')
         shutil.copy2(path, temp_path)
         return temp_path
@@ -118,7 +96,7 @@ class DockerClient(object):
         self.workflow_runner.out_folder = self.output_tag_
 
     def prepare_tps(self) -> Dict[str, Any]:
-        """Helper fucntion for preparing TPS Container Settings
+        """Helper function for preparing TPS Container Settings
 
         Returns:
             Dict[str, Any]: collection of Docker Settings
@@ -156,13 +134,13 @@ class DockerClient(object):
         Returns:
             Dict[str, Any]: collection of Docker Settings
         """
-        pass
+        raise NotImplementedError
 
 
     def run(self) -> None:
         self._create_output_dir()
 
-         # Initialize a Docker client using environment variables
+        # Initialize a Docker client using environment variables
         client = docker.from_env()
 
         # work dir set as the root of the repository
@@ -190,7 +168,7 @@ class DockerClient(object):
         container_settings = self.DOCKER_SETTINGS.get(
             self.client_name, lambda: f'invalid client: {self.client}')()
 
-         # Initialize a Docker client using environment variables
+        # Initialize a Docker client using environment variables
         client = docker.from_env()
 
         try:
@@ -205,7 +183,3 @@ class DockerClient(object):
         finally:
             # Not sure whether this is needed
             client.close()
-
-
-
-
