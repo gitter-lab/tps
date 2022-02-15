@@ -12,9 +12,7 @@ from requests.exceptions import HTTPError
 from json.decoder import JSONDecodeError
 from py2cytoscape.data.cyrest_client import CyRestClient
 from py2cytoscape import cyrest
-from typing import Dict, Any
-
-from docker.cytoscape.tests import connect_cytoscape 
+from typing import Dict, Any 
 from workflow import CYTOSCAPE_DATATYPES
 
 class Runner(object):
