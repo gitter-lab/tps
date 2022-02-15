@@ -53,28 +53,6 @@ class DockerClient(object):
             'CYTOSCAPE'  : self.prepare_cytoscape
         }
 
-    def _collect_files(self) -> List[os.PathLike]:
-        self.files_ = []
-        for _ , path in self.workflow_runner.tps_input_settings.args.items():
-
-            try:
-                temp_file = Path(path)
-                if temp_file.is_file():
-                    self.files_.append(temp_file)
-                else:
-                    print(f"{path} not path")
-            except TypeError:
-                print('not path')
-
-        tempfile.mkdtemp(dir=Path('data'))
-
-    @staticmethod
-    def create_temporary_copy(path):
-        temp_dir = tempfile.gettempdir()
-        temp_path = os.path.join(temp_dir, 'temp_file_name')
-        shutil.copy2(path, temp_path)
-        return temp_path
-
     def _create_output_dir(self) -> None:
         '''
         generate output tag: output_tag_
