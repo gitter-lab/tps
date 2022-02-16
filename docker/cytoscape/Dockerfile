@@ -35,8 +35,8 @@ COPY docker/cytoscape/env.yml /docker/minimal_env.yml
 RUN conda env create -f docker/minimal_env.yml
 
 COPY docker/cytoscape/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY docker/cytoscape/tests/connect_cytoscape.py  /cytoscape/connect_cytoscape.py
-COPY docker/cytoscape/tests/connect.sh            /cytoscape/connect.sh
+COPY docker/cytoscape/src/connect_cytoscape.py  /cytoscape/connect_cytoscape.py
+COPY docker/cytoscape/src/connect.sh            /cytoscape/connect.sh
 
 EXPOSE 1234 5900
 CMD ["/usr/bin/supervisord > /dev/null 2>&1"]

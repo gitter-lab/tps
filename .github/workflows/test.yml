@@ -54,7 +54,6 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v2
-
       - name: Build TPS Docker image
         uses: docker/build-push-action@v1
         with:
@@ -73,5 +72,3 @@ jobs:
           tags: latest
           cache_froms: ajshedivy/cytoscape:latest
           push: false
-      
-

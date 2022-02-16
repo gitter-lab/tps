@@ -170,7 +170,7 @@ class Visualize:
             if os.path.exists(self.cytoscape_input_settings.path):
                 print('exists')
             else:
-                print('dne')
+                print('cytoscape path does not exist')
                 sys.exit()
             path = self.__find_path(self.cytoscape_input_settings.name, self.cytoscape_input_settings.path)
             print(path)

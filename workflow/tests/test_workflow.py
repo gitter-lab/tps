@@ -1,9 +1,10 @@
 import os
 import subprocess
+import pytest
 
 CONFIGS = {
     'default':'default.yaml',
-    'tps-cytoscape':'tps-cytoscape.yaml',
+    'tps-cytoscape':'tps-cytoscape.yaml',  # does not exist yet
     'tps-no-container':'tps-no-container.yaml'
 }
 class TestWorkFlow:
@@ -12,21 +13,10 @@ class TestWorkFlow:
     def setup_method(self):
         self.tps_root = os.getcwd()
         self.tps_main = os.path.join(self.tps_root, 'tps_runner.py')
-    
-    def test_workflow_default(self):
-        config = os.path.join(self.tps_root,'workflow' ,'tests', 'standards', CONFIGS['default'])
-        call = ['python', self.tps_main, 
-                '--config', config, '--execute', 'tps']
-        assert subprocess.run(call, check=True).returncode == 0
 
-    def test_tps_no_container(self):
-        config = os.path.join(self.tps_root, 'workflow','tests', 'standards', CONFIGS['tps-no-container'])
-        call = ['python', self.tps_main, 
-                '--config', config, '--execute', 'tps']
-        assert subprocess.run(call, check=True).returncode == 0
-
-    def test_tps_files(self):
-        config = os.path.join(self.tps_root,'workflow' ,'tests', 'standards', CONFIGS['default'])
+    @pytest.mark.parametrize('config_type', ['default', 'tps-no-container'])
+    def test_tps_workflow(self, config_type):
+        config = os.path.join(self.tps_root,'workflow' ,'tests', 'standards', CONFIGS[config_type])
         call = ['python', self.tps_main, 
                 '--config', config, '--execute', 'tps']
         assert subprocess.run(call, check=True).returncode == 0
