@@ -14,7 +14,6 @@ from py2cytoscape.data.cyrest_client import CyRestClient
 from py2cytoscape import cyrest
 from typing import Dict, Any
 
-from workflow import connect_cytoscape 
 from workflow import CYTOSCAPE_DATATYPES
 
 class Runner(object):
