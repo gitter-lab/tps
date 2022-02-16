@@ -4,6 +4,7 @@ channels:
   - defaults
 dependencies:
   - python=3.6
+  - docker-py=5.0
   - scipy=1.1.0
   - networkx=2.4
   - numpy=1.18

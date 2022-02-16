@@ -1,25 +1,38 @@
+
 import subprocess
 import glob
 import os
 import time
+import sys
 import psutil
+from workflow import WorkflowRun
 from workflow.utilities import PrepTemporalCytoscapeTPS
 from requests.exceptions import ConnectionError
 from requests.exceptions import HTTPError
 from json.decoder import JSONDecodeError
 from py2cytoscape.data.cyrest_client import CyRestClient
 from py2cytoscape import cyrest
+from typing import Dict, Any
 
-class Runner:
+from workflow import CYTOSCAPE_DATATYPES
+
+class Runner(object):
     '''
     the Runner object encapsulates the WorkflowRun object in order to execute
     the TPS software
     '''
     def __init__(self, 
-        workflow_runner):
+        workflow_runner: WorkflowRun):
         self.workflow_runner = workflow_runner
 
-    def run_tps(self):
+    def run_tps(self) -> 'Runner':
+        if self.workflow_runner.docker_settings.use_docker:
+            print('using TPS Docker Container')
+            # only import Docker_client when needed
+            from workflow.docker_util import DockerClient
+            DockerClient('TPS', self.workflow_runner).run_docker()
+            self.output_files = self.__check_outputs()
+            return self
         try:
             subprocess.run(
                 self.workflow_runner.build,
@@ -59,7 +72,7 @@ class Annotations:
     the Annotations object generates node annotations from defined annotations
     input settings and a Runner object (in order to pass outputs of TPS)
     '''
-    def __init__(self, annot_input_settings,
+    def __init__(self, annot_input_settings: Dict[str, Any],
                         runner: Runner):
 
         self.annot_input_settings = annot_input_settings
@@ -69,7 +82,7 @@ class Annotations:
         self.out_annot_file = os.path.join(self.out_folder, self.annot_input_settings['outAnnotFile'])
         self.out_style_file = os.path.join(self.out_folder, self.annot_input_settings['outStyleFile'])
 
-    def generate_annotations(self):
+    def generate_annotations(self) -> 'Annotations':
         print(f'output folder: {self.out_folder}')
         PrepTemporalCytoscapeTPS(
             self.annot_input_settings['peptideMapFile'],
@@ -102,7 +115,7 @@ class Visualize:
     and generated node annotations into a local Cytoscape session
 
     '''
-    def __init__(self, cytoscape_input_settings,
+    def __init__(self, cytoscape_input_settings: Dict[str, Any],
                 runner: Runner, annotations: Annotations):
         self.cytoscape_input_settings = cytoscape_input_settings
         self.runner = runner
@@ -110,7 +123,7 @@ class Visualize:
             self.runner.workflow_runner.out_folder, self.cytoscape_input_settings.session
         ))
         self.annotations = annotations
-        self.data_types = 's,s,b,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl'
+        self.data_types = CYTOSCAPE_DATATYPES
     
     def __process_exists(self, process_name):
 
@@ -127,6 +140,7 @@ class Visualize:
         if not result:
             print(f'Cytoscape path: {path} not valid')
             return None
+        print(result)
         return result[0]
     
     def __visualize_outputs(self):
@@ -153,7 +167,14 @@ class Visualize:
         check = self.__process_exists(self.cytoscape_input_settings.name)
 
         if not check:
+            print(self.cytoscape_input_settings.path)
+            if os.path.exists(self.cytoscape_input_settings.path):
+                print('exists')
+            else:
+                print('cytoscape path does not exist')
+                sys.exit()
             path = self.__find_path(self.cytoscape_input_settings.name, self.cytoscape_input_settings.path)
+            print(path)
             subprocess.Popen(path)
         else:
             print('Cytoscape already running')

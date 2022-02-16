@@ -5,10 +5,14 @@ https://github.com/Murali-group/Beeline/blob/master/BLRun/__init__.py
 '''
 import yaml
 import os
+from typing import Dict, Any
 
 # define defaults to be used during initialization
-DEFAULT_OUT_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DEFAULT = '<value-here>'
+DEFAULT_OUT_FOLDER  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DEFAULT             = '<value-here>'
+OUTPUT_FOLDER       = 'outfolder'
+TPS_RUN             = './scripts/run'
+CYTOSCAPE_DATATYPES = 's,s,b,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl'
 
 class CytoscapeSettings(object):
     '''
@@ -16,9 +20,9 @@ class CytoscapeSettings(object):
 
     '''
     def __init__(self, path, session, name):
-        self.path = path
+        self.path    = path
         self.session = session
-        self.name = name
+        self.name    = name
 
         
 
@@ -27,12 +31,12 @@ class TPSSettings(object):
     wrapper object for TPS settings defined in config file
 
     '''
-    def __init__(self, required, optional, flags):
-        self.required = required
-        self.optional = optional
-        self.flags = flags
+    def __init__(self, required: Dict[str, Any], optional, flags):
+        self.required     = required
+        self.optional     = optional
+        self.flags        = flags
         self.output_label = required['outlabel']
-        self.args = self.__parse_input_settings()
+        self.args         = self.__parse_input_settings()
 
     def __parse_input_settings(self):
         filtered_ags = {**self.required, 
@@ -53,6 +57,14 @@ class AnnotationsSettings(object):
     def __getitem__(self, key):
         return self.annotations[key]
 
+class DockerSettings(object):
+    def __init__(self, settings: dict()):
+        self.docker_settings = settings
+        self.use_docker      = self.docker_settings['TPS']
+        self.use_cytoscape   = self.docker_settings['Cytoscape']
+        
+
+
 class WorkflowRun(object):
     '''
     the WorkflowRun object is created by parsing a user-definded configuration
@@ -64,16 +76,18 @@ class WorkflowRun(object):
     def __init__(self,
                 cytoscape_input_settings: CytoscapeSettings,
                 tps_input_settings: TPSSettings,
-                annot_input_settings: AnnotationsSettings):
+                annot_input_settings: AnnotationsSettings,
+                docker_settings: DockerSettings):
         
         self.cytoscape_input_settings = cytoscape_input_settings
-        self.tps_input_settings = tps_input_settings
-        self.annot_input_settings = annot_input_settings
-        self.build = self.__build_tps_inputs(tps_input_settings)
-        self.out_folder = self.__get_out_folder()
+        self.tps_input_settings       = tps_input_settings
+        self.annot_input_settings     = annot_input_settings
+        self.docker_settings          = docker_settings
+        self.build                    = self.__build_tps_inputs(tps_input_settings)
+        self.out_folder               = self.__get_out_folder()
 
     def __build_tps_inputs(self, tps_input_settings):
-        build = ['bash', './scripts/run']
+        build = ['bash', TPS_RUN]
         for key, val in self.tps_input_settings.args.items():
             k = '--' + key
             build.extend([k, str(val)])
@@ -82,7 +96,7 @@ class WorkflowRun(object):
         return build
 
     def __get_out_folder(self):
-        check = 'outfolder'
+        check = OUTPUT_FOLDER
         if check in self.tps_input_settings.args:
             print(f'outfolder provided: {self.tps_input_settings.args[check]}')
             out_folder = self.tps_input_settings.args[check]
@@ -105,23 +119,30 @@ class ConfigParser(object):
             ConfigParser.__parse_tps_settings(
                 config_map['TPS']),
             ConfigParser.__parse_annotations_settings(
-                config_map['Annotations'])
+                config_map['Annotations']),
+            ConfigParser.__parse_docker_settings(
+                config_map['Docker']
+            )
         )
 
     @staticmethod
-    def __parse_cytoscape_settings(cytoscape_settings_map):
+    def __parse_cytoscape_settings(cytoscape_settings_map) -> CytoscapeSettings:
         return CytoscapeSettings(cytoscape_settings_map['path'],
                         cytoscape_settings_map['session'], 
                         cytoscape_settings_map['name'])
 
     @staticmethod
-    def __parse_tps_settings(tps_settings_map):
+    def __parse_tps_settings(tps_settings_map) -> TPSSettings:
         required = tps_settings_map['required']
         optional = tps_settings_map.get('optional', [])
-        flags = tps_settings_map.get('flags', [])
+        flags    = tps_settings_map.get('flags', [])
 
         return TPSSettings(required, optional, flags)
 
     @staticmethod
-    def __parse_annotations_settings(annot_settings_map):
+    def __parse_annotations_settings(annot_settings_map) -> AnnotationsSettings:
         return AnnotationsSettings(annot_settings_map)
+
+    @staticmethod
+    def __parse_docker_settings(docker_settings) -> DockerSettings:
+        return DockerSettings(docker_settings)
