@@ -45,7 +45,7 @@ echo "CONFIG FILE           = ${CONFIG}"
 echo "EXECUTION SETTING     = ${EXECUTE}"
 
 if [[ -n $1 ]]; then
-  echo "Last line of file specified as non-opt/last argument:"
+  echo "error: invalid arguments"
 	echo "usage: bash workflow.sh --config [config.yml] --execute [all|annotations|tps]"
   exit 0
 fi
