@@ -28,6 +28,11 @@ while [[ $# -gt 0 ]]; do
       shift # past argument
       shift # past value
       ;;
+    -d|--datatypes)
+      DATATYPES="$2"
+      shift # past argument
+      shift # past value
+      ;;
     -*|--*)
       echo "Unknown option $1"
       exit 1
@@ -44,6 +49,7 @@ echo "SAVE FILE         = ${SAVE}"
 echo "STYLE FILE        = ${STYLE}"
 echo "ANNOTATIONS FILE  = ${ANNOTATIONS}"
 echo "NETWORK FILE      = ${NETWORK}"
+echo "DATA TYPES        = ${DATATYPES}" 
 
 if [[ -n $1 ]]; then
     echo "Last line of file specified as non-opt/last argument:"

@@ -98,6 +98,7 @@ class DockerClient(object):
             output_path : {'bind': '/tps/'+self.output_tag_, 'mode': 'rw'}
         }
         container_settings['container_wdir'] = '/tps'
+        container_settings['ports'] = {}
 
         return container_settings
 
@@ -138,16 +139,18 @@ class DockerClient(object):
         }
 
         container_settings['container_wdir'] = '/cytoscape'
+        return container_settings
 
     def build_cytoscape_command(self):
-        command = [
-            'bash', 'connect.sh', 
-            '--save', '',
-            '--style', '',
-            '--annot', '',
-            '--network', ''
-        ]
-
+        command = ['bash', 'connect.sh']
+        args = {
+            '--save':    DOCKER_OUTFOLDER + os.path.basename(self.cytoscape.save_file),
+            '--style':   DOCKER_OUTFOLDER + os.path.basename(self.cytoscape.style_file),
+            '--annot':   DOCKER_OUTFOLDER + os.path.basename(self.cytoscape.annot_file),
+            '--network': DOCKER_OUTFOLDER + os.path.basename(self.cytoscape.network_file),
+            '--datatypes': self.cytoscape.data_types
+        }
+        command.extend(list(functools.reduce(lambda x, y: x+y, args.items())))
         return command
 
 
@@ -192,6 +195,7 @@ class DockerClient(object):
                 container_settings['command'],
                 stderr=True,
                 volumes=container_settings['volumes'],
+                ports=container_settings['ports'],
                 working_dir=container_settings['container_wdir'])
             print(container_output.decode('utf-8'))
 

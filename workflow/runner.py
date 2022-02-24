@@ -123,6 +123,10 @@ class Visualize:
         ))
         self.annotations = annotations
         self.data_types = CYTOSCAPE_DATATYPES
+        self.network_file = os.path.abspath(self.runner.output_files['network-file'])
+
+        self.annot_file = os.path.abspath(self.annotations.out_annot_file)
+        self.style_file = os.path.abspath(self.annotations.out_style_file)
     
     def __process_exists(self, process_name):
 
@@ -148,8 +152,8 @@ class Visualize:
 
         cyclient = cyrest.cyclient()
         cy = CyRestClient()
-        #cy.session.delete()
-        cy.network.create_from(self.runner.output_files['network-file'])
+        cy.session.delete()
+        cy.network.create_from(self.network_file)
         time.sleep(2)
         style = cyclient.vizmap.load_file(_style_file)
         cyclient.vizmap.apply(style[0])
@@ -160,6 +164,7 @@ class Visualize:
             startLoadRow='0',
             dataTypeList=self.data_types
         )
+        print(self.save_file)
         cyclient.session.save_as(session_file=self.save_file)
 
     def check_cytpscape(self):
@@ -167,7 +172,7 @@ class Visualize:
 
         if not check:
             print(self.cytoscape_input_settings.path)
-            if os.path.exists(self.cytoscape_input_settings.path):
+            if os.path.exists(os.path.abspath(self.cytoscape_input_settings.path)):
                 print('exists')
             else:
                 print('cytoscape path does not exist')
@@ -178,12 +183,7 @@ class Visualize:
         else:
             print('Cytoscape already running')
 
-    def load_cytoscape(self):
-
-        if self.workflow_runner.docker_settings.use_cytoscape:
-            # docker side step
-            pass
-        
+    def load_local_cytoscape(self):
         self.check_cytpscape()
         connection_count = 0
         json_count = 0
@@ -210,3 +210,20 @@ class Visualize:
         end = time.time()
 
         print(f'time elapsed: {end-start}')
+        return self
+
+    def load_docker_cytoscape(self):
+        print('using Cytoscape Docker Container')
+        # only import Docker_client when needed
+        from workflow.docker_util import DockerClient
+        DockerClient('CYTOSCAPE', self.runner.workflow_runner, self).run_docker()
+        return self
+
+    def load_cytoscape(self):
+
+        if self.runner.workflow_runner.docker_settings.use_cytoscape:
+            # docker side step
+            self.load_docker_cytoscape()
+            return
+        self.load_local_cytoscape()
+        return

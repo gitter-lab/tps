@@ -10,6 +10,7 @@ Citation:
 '''
 import argparse
 from re import S
+from tabnanny import verbose
 from py2cytoscape import cyrest
 from requests.exceptions import ConnectionError
 import time
@@ -265,6 +266,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument('--style', help='style file')
     parser.add_argument('--annot', help='annotations file')
     parser.add_argument('--network', help='network file')
+    parser.add_argument('--datatypes', help='data types for columns')
 
     return parser
 
@@ -280,19 +282,19 @@ def parse_arguments():
 
 class CytoscapeClient:
 
-    def __init__(self, save_file, style_file, annot_file, network_file) -> None:
+    def __init__(self, save_file, style_file, annot_file, network_file, data_types) -> None:
         self.save_file = save_file
         self.style_file = style_file
         self.annot_file = annot_file
         self.network_file = network_file
+        self.data_types = data_types
 
-    def __visualize_outputs(self):
+    def __visualize_outputs(self, cyclient):
         _annot_file = os.path.abspath(self.annot_file)
         _style_file = os.path.abspath(self.style_file)
 
-        cyclient = cyrest.cyclient()
         cy = CyRestClient()
-        #cy.session.delete()
+        cy.session.delete()
         cy.network.create_from(self.network_file)
         time.sleep(2)
         style = cyclient.vizmap.load_file(_style_file)
@@ -302,9 +304,11 @@ class CytoscapeClient:
             firstRowAsColumnNames=True,
             keyColumnIndex='1',
             startLoadRow='0',
+            delimitersForDataList='|',
             dataTypeList=self.data_types
         )
-        cyclient.session.save_as(session_file=self.save_file)
+        session_full_file = os.path.abspath(self.save_file)
+        cyclient.session.save_as(session_file=session_full_file)
 
 
     def check_cyrest(self, port):
@@ -331,15 +335,13 @@ class CytoscapeClient:
                 else:
                     if status.ok and status.status_code == 200:
                         connection = True
-                        #self.__visualize_outputs()
+                        self.__visualize_outputs(cytoscape)
                         print('connection successful, exiting script')
                     else:
                         print(f"{status.status_code}")
                         sys.exit()
             except ConnectionError as e:
                 print(e)
-                sys.exit()
-            finally:
                 sys.exit()
 
 def main():
@@ -348,8 +350,9 @@ def main():
     save_file = opts.save
     annot_file = opts.annot
     network_file = opts.network
+    data_types = opts.datatypes
 
-    cyclient = CytoscapeClient(save_file, style_file, annot_file, network_file)
+    cyclient = CytoscapeClient(save_file, style_file, annot_file, network_file, data_types)
     cyclient.check_cyrest(1234)
 
 
