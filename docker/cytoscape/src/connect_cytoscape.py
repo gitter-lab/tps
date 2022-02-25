@@ -222,36 +222,7 @@ def _status(cyrest_client, host, port, verbose=False):
 ##########################################################################################################
 ##########################################################################################################
        
-
-# def check_cyrest(port):
-#     print('start supervisord client')
-#     try:
-#         subprocess.run([
-#             "/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"
-#         ],
-#         check=True)
-#     except subprocess.CalledProcessError as e:
-#          print('an error has occurred while trying to run TPS\n\n' + str(e))
-
-#     connection = False
-#     while not connection:
-#         try:
-#             print(f"try port {port}")
-#             cytoscape = cyrest.cyclient(host='localhost', port=port)
-#             status = _status(cytoscape, 'localhost', port)
-#             if not isinstance(status, requests.models.Response):
-#                 time.sleep(4)
-#             else:
-#                 if status.ok and status.status_code == 200:
-#                     connection = True
-#                     print('connection successful, exiting script')
-#                 else:
-#                     print(f"{status.status_code}")
-#                     sys.exit()
-#         except ConnectionError as e:
-#             print(e)
-#             sys.exit()
-
+CYTOSCAPE_DATATYPES = 's,s,b,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl'
 
 def get_parser() -> argparse.ArgumentParser:
     '''
@@ -305,7 +276,7 @@ class CytoscapeClient:
             keyColumnIndex='1',
             startLoadRow='0',
             delimitersForDataList='|',
-            dataTypeList=self.data_types
+            dataTypeList=CYTOSCAPE_DATATYPES
         )
         session_full_file = os.path.abspath(self.save_file)
         cyclient.session.save_as(session_file=session_full_file)
