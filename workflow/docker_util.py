@@ -153,34 +153,6 @@ class DockerClient(object):
         command.extend(list(functools.reduce(lambda x, y: x+y, args.items())))
         return command
 
-
-
-    def run(self) -> None:
-        self._create_output_dir()
-
-        # Initialize a Docker client using environment variables
-        client = docker.from_env()
-
-        # work dir set as the root of the repository
-        work_dir = Path(__file__).parent.parent.absolute()
-
-        try:
-            container_output = client.containers.run(
-                self.client,
-                self.workflow_runner.build,
-                stderr=True,
-                volumes={
-                    prepare_path_docker(work_dir)+'/data': {'bind': '/tps/data', 'mode': 'rw'},
-                    prepare_path_docker(work_dir)+'/'+self.output_tag_: {'bind': '/tps/'+self.output_tag_, 'mode': 'rw'}
-                },
-                working_dir='/tps')
-            print(container_output.decode('utf-8'))
-
-        finally:
-            # Not sure whether this is needed
-            client.close()
-
-
     def run_docker(self) -> None:
 
         container_settings = self.DOCKER_SETTINGS.get(
@@ -194,37 +166,15 @@ class DockerClient(object):
                 self.client,
                 container_settings['command'],
                 stderr=True,
+                stdout=True,
                 volumes=container_settings['volumes'],
                 ports=container_settings['ports'],
-                working_dir=container_settings['container_wdir'])
-            print(container_output.decode('utf-8'))
+                working_dir=container_settings['container_wdir'],
+                detach=True)
+            output = container_output.attach(stdout=True, stream=True, logs=True)
+            for line in output:
+                print(line.decode('utf-8'))
 
         finally:
             # Not sure whether this is needed
             client.close()
-
-    def run_cytoscape(self) -> None:
-        container_settings = self.DOCKER_SETTINGS.get(
-            self.client_name, lambda: f"invalid client: {self.client}")()
-
-        client = docker.from_env()
-
-        try:
-            container_output = client.containers.run(
-                self.client,
-                container_settings['command'],
-                stderr=True,
-                volumes=container_settings['volumes'],
-                ports=container_settings['ports'],
-                working_dir=container_settings['container_wdir'])
-            print(container_output.decode('utf-8'))
-
-        finally:
-            # Not sure whether this is needed
-            client.close()
-
-
-
-
-
-
