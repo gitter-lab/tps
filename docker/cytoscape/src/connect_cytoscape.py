@@ -217,7 +217,7 @@ def _status(cyrest_client, host, port, verbose=False):
         print('CyREST online!')
         return response
     except Exception as e:
-        print('Connecting to Cytoscape ...')
+        print('Connecting to Cytoscape ...', flush=True)
 
 ##########################################################################################################
 ##########################################################################################################
@@ -279,11 +279,13 @@ class CytoscapeClient:
             dataTypeList=CYTOSCAPE_DATATYPES
         )
         session_full_file = os.path.abspath(self.save_file)
+        session_net_image = os.path.abspath('output/tps-output-image.pdf')
         cyclient.session.save_as(session_file=session_full_file)
+        cyclient.view.export(options='PDF', outputFile=session_net_image)
 
 
     def check_cyrest(self, port):
-        print('start supervisord client')
+        print('start supervisord client', flush=True)
         try:
             subprocess.run([
                 "/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"
@@ -295,7 +297,7 @@ class CytoscapeClient:
         connection = False
         attempts = 0
 
-        print(f"try port {port}")
+        print(f"try port {port}", flush=True)
         while not connection:
             try:
                 cytoscape = cyrest.cyclient(host='localhost', port=port)
@@ -307,9 +309,9 @@ class CytoscapeClient:
                     if status.ok and status.status_code == 200:
                         connection = True
                         self.__visualize_outputs(cytoscape)
-                        print('connection successful, exiting script')
+                        print('connection successful, exiting script', flush=True)
                     else:
-                        print(f"{status.status_code}")
+                        print(f"{status.status_code}", flush=True)
                         sys.exit()
             except ConnectionError as e:
                 print(e)
