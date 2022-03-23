@@ -68,4 +68,4 @@ if [ $? -ne 0 ]; then
 fi
 echo "environment activated"
 
-python connect_cytoscape.py --save ${SAVE} --style ${STYLE} --annot ${ANNOTATIONS} --network ${NETWORK}
+python connect_cytoscape.py --save ${SAVE} --style ${STYLE} --annot ${ANNOTATIONS} --network ${NETWORK} --datatypes ${DATATYPES}

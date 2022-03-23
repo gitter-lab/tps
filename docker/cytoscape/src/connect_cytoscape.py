@@ -9,24 +9,17 @@ Citation:
 
 '''
 import argparse
-from re import S
-from tabnanny import verbose
 from py2cytoscape import cyrest
 from requests.exceptions import ConnectionError
 import time
 import sys
 import sys
 import requests
-import urllib.request as urllib2		
-import json
 from json import JSONDecodeError
 import subprocess
 import os
 
 from py2cytoscape.data.cyrest_client import CyRestClient
-
-from requests.models import Response
-
 
 ##########################################################################################################
 ##########################################################################################################
@@ -207,7 +200,7 @@ def api(namespace=None, command="", PARAMS={},
 
     return res
 
-def _status(cyrest_client, host, port, verbose=False):
+def _status(host, port, verbose=False):
     """
     Checks the status of your CyREST server.
     """
@@ -221,8 +214,6 @@ def _status(cyrest_client, host, port, verbose=False):
 
 ##########################################################################################################
 ##########################################################################################################
-       
-CYTOSCAPE_DATATYPES = 's,s,b,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl'
 
 def get_parser() -> argparse.ArgumentParser:
     '''
@@ -253,14 +244,14 @@ def parse_arguments():
 
 class CytoscapeClient:
 
-    def __init__(self, save_file, style_file, annot_file, network_file, data_types) -> None:
+    def __init__(self, save_file, style_file, annot_file, network_file, data_types: str) -> None:
         self.save_file = save_file
         self.style_file = style_file
         self.annot_file = annot_file
         self.network_file = network_file
         self.data_types = data_types
 
-    def __visualize_outputs(self, cyclient):
+    def __visualize_outputs(self, cyclient) -> None:
         _annot_file = os.path.abspath(self.annot_file)
         _style_file = os.path.abspath(self.style_file)
 
@@ -276,7 +267,7 @@ class CytoscapeClient:
             keyColumnIndex='1',
             startLoadRow='0',
             delimitersForDataList='|',
-            dataTypeList=CYTOSCAPE_DATATYPES
+            dataTypeList=self.data_types
         )
         session_full_file = os.path.abspath(self.save_file)
         session_net_image = os.path.abspath('output/tps-output-image.pdf')
@@ -301,7 +292,7 @@ class CytoscapeClient:
         while not connection:
             try:
                 cytoscape = cyrest.cyclient(host='localhost', port=port)
-                status = _status(cytoscape, 'localhost', port)
+                status = _status('localhost', port)
                 if not isinstance(status, requests.models.Response):
                     time.sleep(4)
                     attempts+=1
