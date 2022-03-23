@@ -78,7 +78,7 @@
             </visualProperty>
             <visualProperty name="NODE_CUSTOMGRAPHICS_4" default="org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],"/>
             <visualProperty name="NODE_LABEL" default="">
-                <passthroughMapping attributeType="string" attributeName="Gene"/>
+                <passthroughMapping attributeType="string" attributeName="name"/>
             </visualProperty>
             <visualProperty name="NODE_DEPTH" default="0.0"/>
             <visualProperty name="NODE_CUSTOMPAINT_6" default="DefaultVisualizableVisualProperty(id=NODE_CUSTOMPAINT_6, name=Node Custom Paint 6)"/>
