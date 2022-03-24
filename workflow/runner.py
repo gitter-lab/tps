@@ -142,27 +142,6 @@ class Visualize:
             return None
         print(result)
         return result[0]
-    
-    def __visualize_outputs(self):
-        _annot_file = os.path.abspath(self.annotations.out_annot_file)
-        _style_file = os.path.abspath(self.annotations.out_style_file)
-
-        cyclient = cyrest.cyclient()
-        cy = CyRestClient()
-        cy.session.delete()
-        cy.network.create_from(self.network_file)
-        time.sleep(2)
-        style = cyclient.vizmap.load_file(_style_file)
-        cyclient.vizmap.apply(style[0])
-        cyclient.table.import_file(
-            afile=_annot_file,
-            firstRowAsColumnNames=True,
-            keyColumnIndex='1',
-            startLoadRow='0',
-            dataTypeList=self.data_types
-        )
-        print(self.save_file)
-        cyclient.session.save_as(session_file=self.save_file)
 
     def check_cytpscape(self):
         check = self.__process_exists(self.cytoscape_input_settings.name)

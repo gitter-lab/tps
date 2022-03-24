@@ -288,30 +288,6 @@ class CytoscapeClient:
         self.network_file = network_file
         self.data_types = data_types
 
-    def __visualize_outputs(self, cyclient) -> None:
-        _annot_file = os.path.abspath(self.annot_file)
-        _style_file = os.path.abspath(self.style_file)
-
-        cy = CyRestClient()
-        cy.session.delete()
-        cy.network.create_from(self.network_file)
-        time.sleep(2)
-        style = cyclient.vizmap.load_file(_style_file)
-        cyclient.vizmap.apply(style[0])
-        cyclient.table.import_file(
-            afile=_annot_file,
-            firstRowAsColumnNames=True,
-            keyColumnIndex='1',
-            startLoadRow='0',
-            delimitersForDataList='|',
-            dataTypeList=self.data_types
-        )
-        session_full_file = os.path.abspath(self.save_file)
-        session_net_image = os.path.abspath('output/tps-output-image.pdf')
-        cyclient.session.save_as(session_file=session_full_file)
-        cyclient.view.export(options='PDF', outputFile=session_net_image)
-
-
     def check_cyrest(self, port):
         print('start supervisord client', flush=True)
         try:
