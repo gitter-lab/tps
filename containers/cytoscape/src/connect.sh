@@ -52,7 +52,7 @@ echo "NETWORK FILE      = ${NETWORK}"
 echo "DATA TYPES        = ${DATATYPES}" 
 
 if [[ -n $1 ]]; then
-    echo "Last line of file specified as non-opt/last argument:"
+    echo "error: invalid arguments"
     exit 0
 fi
 

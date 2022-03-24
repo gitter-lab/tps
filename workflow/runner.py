@@ -12,8 +12,8 @@ from requests.exceptions import HTTPError
 from json.decoder import JSONDecodeError
 from py2cytoscape.data.cyrest_client import CyRestClient
 from py2cytoscape import cyrest
-from typing import Dict, Any 
-from workflow import CYTOSCAPE_DATATYPES
+from typing import Dict, Any
+from containers.cytoscape.src.connect_cytoscape import load_tps_outputs
 
 class Runner(object):
     '''
@@ -83,7 +83,7 @@ class Annotations:
 
     def generate_annotations(self) -> 'Annotations':
         print(f'output folder: {self.out_folder}')
-        PrepTemporalCytoscapeTPS(
+        _, self.cytoscape_datatypes_ = PrepTemporalCytoscapeTPS(
             self.annot_input_settings['peptideMapFile'],
             self.annot_input_settings['timeSeriesFile'],
             self.annot_input_settings['peptideFirstScores'],
@@ -101,11 +101,8 @@ class Annotations:
 
         return self
 
-    def __refactor_annotations(self):
-        pass
-    
-    def __refactor_column(self):
-        pass
+    def get_datatypes(self) -> str:
+        return self.cytoscape_datatypes_
 
 
 class Visualize:
@@ -122,7 +119,7 @@ class Visualize:
             self.runner.workflow_runner.out_folder, self.cytoscape_input_settings.session
         ))
         self.annotations = annotations
-        self.data_types = CYTOSCAPE_DATATYPES
+        self.data_types = annotations.get_datatypes()
         self.network_file = os.path.abspath(self.runner.output_files['network-file'])
 
         self.annot_file = os.path.abspath(self.annotations.out_annot_file)
@@ -193,7 +190,11 @@ class Visualize:
         while not switch:
             try:
                 print('loading tps and annotation outputs ... ')
-                self.__visualize_outputs()
+                cyclient = cyrest.cyclient()
+                load_tps_outputs(
+                    cyclient, self.network_file, self.annot_file,
+                    self.style_file, self.data_types, self.save_file
+                )
                 switch = True
             except ConnectionError as e:
                 connection_count += 1

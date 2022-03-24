@@ -343,6 +343,8 @@ def PrepTemporalCytoscapeTPS(peptideMapFile, timeSeriesFile, peptideFirstScoreFi
     print("Wrote attributes for %d proteins excluded by PCSF or TPS" %
           (len(allProts) - (steinerCount + sigPrizeCount + insigPrizeCount)))
 
+    print(f"total dl columns: {sigPepCols+insigPepCols}")
+
     # Read the entire file, then use string replacement to substitute
     # the placeholder text with actual values
     with open(styleTemplateFile) as f:
@@ -386,7 +388,12 @@ def PrepTemporalCytoscapeTPS(peptideMapFile, timeSeriesFile, peptideFirstScoreFi
     with open(outStyleFile, "w") as f:
         f.write(styleContents)
 
-    return pepsPerProt["all"]
+    datatypes = 's,s,b'
+    num_cols  = sigPepCols + insigPepCols
+    for i in range(num_cols):
+        datatypes = datatypes + ',dl'
+    
+    return pepsPerProt["all"], datatypes
 
 
 def RobustLog2(val, default):

@@ -12,7 +12,7 @@ DEFAULT_OUT_FOLDER  = os.path.dirname(os.path.dirname(os.path.abspath(__file__))
 DEFAULT             = '<value-here>'
 OUTPUT_FOLDER       = 'outfolder'
 TPS_RUN             = './scripts/run'
-CYTOSCAPE_DATATYPES = 's,s,b,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl,dl'
+CYTOSCAPE_DATATYPES = ""  # data type list set in runner.Annotations.generate_annotations
 
 class CytoscapeSettings(object):
     '''

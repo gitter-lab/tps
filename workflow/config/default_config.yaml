@@ -1,6 +1,6 @@
 Docker:
     TPS: True
-    Cytoscape: True
+    Cytoscape: False
 
 TPS:
     required:
