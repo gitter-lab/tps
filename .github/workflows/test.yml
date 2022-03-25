@@ -58,7 +58,7 @@ jobs:
         uses: docker/build-push-action@v1
         with:
           path: .
-          dockerfile: docker/tps/Dockerfile
+          dockerfile: containers/tps/Dockerfile
           repository: ajshedivy/tps
           tags: latest
           cache_froms: ajshedivy/tps:latest
@@ -67,7 +67,7 @@ jobs:
         uses: docker/build-push-action@v1
         with:
           path: .
-          dockerfile: docker/cytoscape/Dockerfile
+          dockerfile: containers/cytoscape/Dockerfile
           repository: ajshedivy/cytoscape
           tags: latest
           cache_froms: ajshedivy/cytoscape:latest
