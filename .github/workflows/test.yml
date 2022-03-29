@@ -33,11 +33,11 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v2
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{secrets.DOCKERHUB_USER}}
-          password: ${{secrets.DOCKERHUB_PASSWORD}}
+      # - name: Login to DockerHub
+      #   uses: docker/login-action@v1  # passing, but push is not 
+      #   with:
+      #     username: ${{secrets.DOCKERHUB_USER}}
+      #     password: ${{secrets.DOCKERHUB_PASSWORD}}
       - name: Build TPS Docker image
         uses: docker/build-push-action@v1
         with:
@@ -46,7 +46,7 @@ jobs:
           repository: ajshedivy/tps
           tags: latest
           cache_froms: ajshedivy/tps:latest
-          push: true
+          push: false
       - name: Build Cytoscape Docker image
         uses: docker/build-push-action@v1
         with:
@@ -55,7 +55,7 @@ jobs:
           repository: ajshedivy/cytoscape
           tags: latest
           cache_froms: ajshedivy/cytoscape:latest
-          push: true
+          push: false
   workflow:
     name: Test TPS workflow
     runs-on: ${{ matrix.os }}
