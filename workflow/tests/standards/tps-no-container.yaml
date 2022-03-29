@@ -1,6 +1,6 @@
 Docker:
     TPS: False
-    Cytoscape: False
+    Cytoscape: True
 TPS:
     required:
         network: data/networks/input-network.tsv

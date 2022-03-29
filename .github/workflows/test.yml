@@ -24,6 +24,38 @@ jobs:
       - name: Test PCSF
         shell: bash --login {0}
         run: pytest pcsf/tests/
+  docker:
+    name: Build Docker images
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{secrets.DOCKERHUB_USER}}
+          password: ${{secrets.DOCKERHUB_PASSWORD}}
+      - name: Build TPS Docker image
+        uses: docker/build-push-action@v1
+        with:
+          path: .
+          dockerfile: containers/tps/Dockerfile
+          repository: ajshedivy/tps
+          tags: latest
+          cache_froms: ajshedivy/tps:latest
+          push: true
+      - name: Build Cytoscape Docker image
+        uses: docker/build-push-action@v1
+        with:
+          path: .
+          dockerfile: containers/cytoscape/Dockerfile
+          repository: ajshedivy/cytoscape
+          tags: latest
+          cache_froms: ajshedivy/cytoscape:latest
+          push: true
   workflow:
     name: Test TPS workflow
     runs-on: ${{ matrix.os }}
@@ -45,30 +77,3 @@ jobs:
         shell: bash --login {0}
         # Verbose output and disable stdout and stderr capturing
         run: pytest -vs workflow/tests/
-  docker:
-    name: Build Docker images
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-    steps:
-      - name: checkout repository
-        uses: actions/checkout@v2
-      - name: Build TPS Docker image
-        uses: docker/build-push-action@v1
-        with:
-          path: .
-          dockerfile: containers/tps/Dockerfile
-          repository: ajshedivy/tps
-          tags: latest
-          cache_froms: ajshedivy/tps:latest
-          push: false
-      - name: Build Cytoscape Docker image
-        uses: docker/build-push-action@v1
-        with:
-          path: .
-          dockerfile: containers/cytoscape/Dockerfile
-          repository: ajshedivy/cytoscape
-          tags: latest
-          cache_froms: ajshedivy/cytoscape:latest
-          push: false

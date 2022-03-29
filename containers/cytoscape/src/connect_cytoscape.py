@@ -206,7 +206,7 @@ def _status(host, port, verbose=False):
     _url = 'http://' + host + ':' + str(port) + '/' + 'v1' + '/'
     try:
         response=api(url=_url, method="GET", verbose=verbose)
-        print('CyREST online!')
+        print('CyREST online!',flush=True)
         return response
     except Exception as e:
         print('Connecting to Cytoscape ...', flush=True)
@@ -259,6 +259,12 @@ def load_tps_outputs(cyclient: CyRestClient,
 
     _annot_file = os.path.abspath(annot_file)
     _style_file = os.path.abspath(style_file)
+    session_full_file = os.path.abspath(save_file)
+    session_net_image = os.path.abspath('output/tps-output-image.pdf')
+    for file in [session_full_file, session_net_image]:
+        if os.path.isfile(file):
+            print(f"overriding existing session file: {file}", flush=True)
+            os.remove(file)
 
     cy = CyRestClient()
     cy.session.delete()
@@ -274,8 +280,7 @@ def load_tps_outputs(cyclient: CyRestClient,
         delimitersForDataList='|',
         dataTypeList=data_types
     )
-    session_full_file = os.path.abspath(save_file)
-    session_net_image = os.path.abspath('output/tps-output-image.pdf')
+
     cyclient.session.save_as(session_file=session_full_file)
     cyclient.view.export(options='PDF', outputFile=session_net_image)
 
@@ -312,6 +317,8 @@ class CytoscapeClient:
                 else:
                     if status.ok and status.status_code == 200:
                         connection = True
+
+                        print("load outputs into Cytoscape", flush=True)
                         load_tps_outputs(
                             cytoscape, self.network_file, 
                             self.annot_file, self.style_file, 
