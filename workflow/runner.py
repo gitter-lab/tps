@@ -10,7 +10,6 @@ from workflow.utilities import PrepTemporalCytoscapeTPS
 from requests.exceptions import ConnectionError
 from requests.exceptions import HTTPError
 from json.decoder import JSONDecodeError
-from py2cytoscape.data.cyrest_client import CyRestClient
 from py2cytoscape import cyrest
 from typing import Dict, Any
 from containers.cytoscape.src.connect_cytoscape import load_tps_outputs

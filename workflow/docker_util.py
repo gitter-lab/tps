@@ -1,9 +1,9 @@
 import docker
-import sys, re, os, shutil, tempfile, functools
+import re
+import os
+import functools
 from pathlib import PurePath, Path
-
-from py2cytoscape import data
-from typing import Dict, List, Optional, Any, Type
+from typing import Dict, Optional, Any
 
 from workflow.runner import *
 
