@@ -96,13 +96,13 @@ class WorkflowRun(object):
         return build
 
     def __get_out_folder(self):
-        check = OUTPUT_FOLDER
-        if check in self.tps_input_settings.args:
-            print(f'outfolder provided: {self.tps_input_settings.args[check]}')
-            out_folder = self.tps_input_settings.args[check]
-        else:
-            out_folder = DEFAULT_OUT_FOLDER
-        return out_folder
+        if OUTPUT_FOLDER in self.tps_input_settings.args:
+            print(f'outfolder provided: {self.tps_input_settings.args[OUTPUT_FOLDER]}')
+            out_folder = self.tps_input_settings.args[OUTPUT_FOLDER]
+            if not os.path.exists(out_folder):
+                os.makedirs(out_folder)
+            return out_folder
+        return DEFAULT_OUT_FOLDER
 
 class ConfigParser(object):
     '''
