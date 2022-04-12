@@ -387,12 +387,9 @@ def PrepTemporalCytoscapeTPS(peptideMapFile, timeSeriesFile, peptideFirstScoreFi
 
     with open(outStyleFile, "w") as f:
         f.write(styleContents)
-
-    datatypes = 's,s,b'
-    num_cols  = sigPepCols + insigPepCols
-    for i in range(num_cols):
-        datatypes = datatypes + ',dl'
     
+    datatypes = 's,s,b' + ',dl'*(sigPepCols + insigPepCols)
+
     return pepsPerProt["all"], datatypes
 
 
@@ -551,3 +548,4 @@ def RepairMissingData(time_series, first_value):
             time_series[i] = time_series[i-1]
 
     return time_series
+# %%
