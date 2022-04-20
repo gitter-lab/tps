@@ -20,6 +20,10 @@ jobs:
           auto-activate-base: false
           auto-update-conda: false
           miniconda-version: 'latest'
+      # Log conda environment contents
+      - name: Log conda environment
+        shell: bash --login {0}
+        run: conda list
       # Run the PCSF tests in the pcsf conda environment
       - name: Test PCSF
         shell: bash --login {0}
@@ -67,6 +71,10 @@ jobs:
           environment-file: workflow/minimal_env.yml
           auto-activate-base: false
           miniconda-version: 'latest'
+      # Log conda environment contents
+      - name: Log conda environment
+        shell: bash --login {0}
+        run: conda list
       # Run the workflow tests
       - name: Test workflow
         shell: bash --login {0}
