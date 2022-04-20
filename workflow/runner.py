@@ -24,7 +24,7 @@ class Runner(object):
         self.workflow_runner = workflow_runner
 
     def run_tps(self) -> 'Runner':
-        if self.workflow_runner.docker_settings.use_docker:
+        if self.workflow_runner.docker_settings.use_tps:
             print('using TPS Docker Container')
             # only import Docker_client when needed
             from workflow.docker_util import DockerClient

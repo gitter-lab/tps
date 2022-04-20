@@ -5,14 +5,16 @@ https://github.com/Murali-group/Beeline/blob/master/BLRun/__init__.py
 '''
 import yaml
 import os
-from typing import Dict, Any
-
+from typing import Dict, Any, Union
+from pathlib import Path
+import sys
 # define defaults to be used during initialization
-DEFAULT_OUT_FOLDER  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TPS_ROOT  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT             = '<value-here>'
 OUTPUT_FOLDER       = 'outfolder'
 TPS_RUN             = './scripts/run'
 CYTOSCAPE_DATATYPES = ""  # data type list set in runner.Annotations.generate_annotations
+EXECUTION_SETTINGS  = ['tps', 'annotations', 'all']
 
 class CytoscapeSettings(object):
     '''
@@ -38,12 +40,17 @@ class TPSSettings(object):
         self.output_label = required['outlabel']
         self.args         = self.__parse_input_settings()
 
-    def __parse_input_settings(self):
+    def __parse_input_settings(self) -> Dict[str, Any]:
         filtered_ags = {**self.required, 
                     **self.optional}
         args = {key:val for key, val in filtered_ags.items()
                     if filtered_ags[key] != 'None'}
         return args
+
+    def _add_setting(self, key:str, val: Union[str, Path]):
+        if key in self.args:
+            raise KeyError(f'key: {key} already provided')
+        self.args[key] = val      
 
 
 class AnnotationsSettings(object):
@@ -58,9 +65,9 @@ class AnnotationsSettings(object):
         return self.annotations[key]
 
 class DockerSettings(object):
-    def __init__(self, settings: dict()):
+    def __init__(self, settings: Dict[str, Any]):
         self.docker_settings = settings
-        self.use_docker      = self.docker_settings['TPS']
+        self.use_tps      = self.docker_settings['TPS']
         self.use_cytoscape   = self.docker_settings['Cytoscape']
         
 
@@ -83,8 +90,9 @@ class WorkflowRun(object):
         self.tps_input_settings       = tps_input_settings
         self.annot_input_settings     = annot_input_settings
         self.docker_settings          = docker_settings
-        self.build                    = self.__build_tps_inputs(tps_input_settings)
         self.out_folder               = self.__get_out_folder()
+        self.build                    = self.__build_tps_inputs(tps_input_settings)
+
 
     def __build_tps_inputs(self, tps_input_settings):
         build = ['bash', TPS_RUN]
@@ -95,14 +103,24 @@ class WorkflowRun(object):
             build.extend(tps_input_settings.flags)
         return build
 
-    def __get_out_folder(self):
+    def __make_out_folder(self, folder: Union[str, Path]) -> None:
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+
+    def __get_out_folder(self) -> None:
         if OUTPUT_FOLDER in self.tps_input_settings.args:
             print(f'outfolder provided: {self.tps_input_settings.args[OUTPUT_FOLDER]}')
             out_folder = self.tps_input_settings.args[OUTPUT_FOLDER]
-            if not os.path.exists(out_folder):
-                os.makedirs(out_folder)
+            self.__make_out_folder(out_folder)
             return out_folder
-        return DEFAULT_OUT_FOLDER
+
+        if not self.docker_settings.use_tps:
+            out_folder = os.path.join(TPS_ROOT, 'output')
+            self.__make_out_folder(out_folder)
+            self.tps_input_settings._add_setting(OUTPUT_FOLDER, out_folder)
+            return out_folder
+
+        return TPS_ROOT
 
 class ConfigParser(object):
     '''
@@ -111,7 +129,7 @@ class ConfigParser(object):
     '''
 
     @staticmethod
-    def parse(config_file_handle) -> WorkflowRun:
+    def parse(config_file_handle: Union[str, Path], execution_rule: str) -> WorkflowRun:
         config_map = yaml.load(config_file_handle)
         return WorkflowRun(
             ConfigParser.__parse_cytoscape_settings(

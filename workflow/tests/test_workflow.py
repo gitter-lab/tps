@@ -20,14 +20,24 @@ class TestWorkFlow:
                 '--config', config, '--execute', 'tps']
         assert subprocess.run(call, check=True).returncode == 0
 
-        outputs = [
-            os.path.join(self.tps_root, 'output', 'test-runner-full-temporal-interpretation.tsv'),
-            os.path.join(self.tps_root, 'output', 'test-runner-full-activity-windows.tsv'),
-            os.path.join(self.tps_root, 'output', 'test-runner-full-output.sif'),
-            os.path.join(self.tps_root, 'output', 'test-runner-full-output.tsv')
-        ]
+        if config_type == 'tps_no_container':
+            outputs = [
+                os.path.join(self.tps_root, 'test-runner-full-temporal-interpretation.tsv'),
+                os.path.join(self.tps_root, 'test-runner-full-activity-windows.tsv'),
+                os.path.join(self.tps_root, 'test-runner-full-output.sif'),
+                os.path.join(self.tps_root, 'test-runner-full-output.tsv')
+            ]
+        else:
+            outputs = [
+                os.path.join(self.tps_root, 'output', 'test-runner-full-temporal-interpretation.tsv'),
+                os.path.join(self.tps_root, 'output', 'test-runner-full-activity-windows.tsv'),
+                os.path.join(self.tps_root, 'output', 'test-runner-full-output.sif'),
+                os.path.join(self.tps_root, 'output', 'test-runner-full-output.tsv')
+            ]
+            
         for file in outputs:
-            assert os.path.isfile(file)  
+            assert os.path.isfile(file)
+            os.remove(file)  
     @pytest.mark.parametrize('config_type', ['default', 'tps-no-container'])
     def test_annotations(self, config_type):
         config = os.path.join(self.tps_root,'workflow' ,'tests', 'standards', CONFIGS[config_type])
@@ -47,6 +57,7 @@ class TestWorkFlow:
 
         for file in outputs:
             assert os.path.isfile(file)
+            os.remove(file)
 
     @pytest.mark.parametrize('config_type', ['default', 'tps-no-container'])
     def test_full(self, config_type):
@@ -69,6 +80,7 @@ class TestWorkFlow:
 
         for file in outputs:
             assert os.path.isfile(file)
+            os.remove(file)
 
     # def test_tps_container():
     #     ...
