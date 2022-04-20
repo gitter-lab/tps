@@ -20,7 +20,7 @@ class TestWorkFlow:
                 '--config', config, '--execute', 'tps']
         assert subprocess.run(call, check=True).returncode == 0
 
-        if config_type == 'tps_no_container':
+        if config_type == 'tps-no-container':
             outputs = [
                 os.path.join(self.tps_root, 'test-runner-full-temporal-interpretation.tsv'),
                 os.path.join(self.tps_root, 'test-runner-full-activity-windows.tsv'),

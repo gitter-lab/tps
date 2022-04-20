@@ -66,7 +66,6 @@ jobs:
           activate-environment: tps_workflow
           environment-file: workflow/minimal_env.yml
           auto-activate-base: false
-          auto-activate-conda: false
           miniconda-version: 'latest'
       # Run the workflow tests
       - name: Test workflow
