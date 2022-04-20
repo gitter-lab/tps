@@ -72,4 +72,4 @@ jobs:
       - name: Test workflow
         shell: bash --login {0}
         # Verbose output and disable stdout and stderr capturing
-        run: pytest -vs workflow/tests/
+        run: pytest workflow/tests/
