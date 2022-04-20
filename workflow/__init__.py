@@ -129,7 +129,7 @@ class ConfigParser(object):
     '''
 
     @staticmethod
-    def parse(config_file_handle: Union[str, Path], execution_rule: str) -> WorkflowRun:
+    def parse(config_file_handle: Union[str, Path]) -> WorkflowRun:
         config_map = yaml.load(config_file_handle)
         return WorkflowRun(
             ConfigParser.__parse_cytoscape_settings(
