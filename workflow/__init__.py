@@ -7,7 +7,7 @@ import yaml
 import os
 from typing import Dict, Any, Union
 from pathlib import Path
-import sys
+
 # define defaults to be used during initialization
 TPS_ROOT  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT             = '<value-here>'
