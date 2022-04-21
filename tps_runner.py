@@ -40,7 +40,7 @@ def main():
     rule = opts.execute
 
     with open(config_file, 'r') as conf:
-        params = workflow.ConfigParser.parse(conf)
+        params = workflow.ConfigParser.parse(conf, rule.casefold())
 
     if rule.lower() == 'all':
 

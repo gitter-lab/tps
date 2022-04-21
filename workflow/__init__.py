@@ -9,11 +9,12 @@ from typing import Dict, Any, Union
 from pathlib import Path
 
 # define defaults to be used during initialization
-TPS_ROOT  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DEFAULT             = '<value-here>'
-OUTPUT_FOLDER       = 'outfolder'
-TPS_RUN             = './scripts/run'
-CYTOSCAPE_DATATYPES = ""  # data type list set in runner.Annotations.generate_annotations
+TPS_ROOT                    =  os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DEFAULT_OUTPUT_FOLDER       = os.path.join(TPS_ROOT, 'output')
+DEFAULT                     = '<value-here>'
+OUTPUT_FOLDER               = 'outfolder'
+TPS_RUN                     = './scripts/run'
+CYTOSCAPE_DATATYPES         = ""  # data type list set in runner.Annotations.generate_annotations
 
 class CytoscapeSettings(object):
     '''
@@ -83,14 +84,16 @@ class WorkflowRun(object):
                 cytoscape_input_settings: CytoscapeSettings,
                 tps_input_settings: TPSSettings,
                 annot_input_settings: AnnotationsSettings,
-                docker_settings: DockerSettings):
-        
+                docker_settings: DockerSettings,
+                rule: str):
+        self.rule                     = rule
         self.cytoscape_input_settings = cytoscape_input_settings
         self.tps_input_settings       = tps_input_settings
         self.annot_input_settings     = annot_input_settings
         self.docker_settings          = docker_settings
         self.out_folder               = self.__get_out_folder()
         self.build                    = self.__build_tps_inputs(tps_input_settings)
+        
 
 
     def __build_tps_inputs(self, tps_input_settings):
@@ -107,19 +110,31 @@ class WorkflowRun(object):
             os.makedirs(folder)
 
     def __get_out_folder(self) -> None:
+        """
+        if output folder provided in config:
+            return folder
+        if not using tps container but executing annot or all:
+            use default output folder in repo
+        else
+            return tps root 
+
+
+        Returns:
+            Union[Path, str]: output folder
+        """
+        out_folder = None
         if OUTPUT_FOLDER in self.tps_input_settings.args:
             print(f'outfolder provided: {self.tps_input_settings.args[OUTPUT_FOLDER]}')
             out_folder = self.tps_input_settings.args[OUTPUT_FOLDER]
             self.__make_out_folder(out_folder)
-            return out_folder
 
-        if self.docker_settings.use_tps:
-            out_folder = os.path.join(TPS_ROOT, 'output')
-            self.__make_out_folder(out_folder)
+        elif not self.docker_settings.use_tps and self.rule != 'tps':
+            out_folder = DEFAULT_OUTPUT_FOLDER
             self.tps_input_settings._add_setting(OUTPUT_FOLDER, out_folder)
-            return out_folder
+        else:
+            out_folder = TPS_ROOT
 
-        return TPS_ROOT
+        return out_folder
 
 class ConfigParser(object):
     '''
@@ -128,7 +143,7 @@ class ConfigParser(object):
     '''
 
     @staticmethod
-    def parse(config_file_handle: Union[str, Path]) -> WorkflowRun:
+    def parse(config_file_handle: Union[str, Path], rule: str) -> WorkflowRun:
         config_map = yaml.load(config_file_handle)
         return WorkflowRun(
             ConfigParser.__parse_cytoscape_settings(
@@ -139,7 +154,8 @@ class ConfigParser(object):
                 config_map['Annotations']),
             ConfigParser.__parse_docker_settings(
                 config_map['Docker']
-            )
+            ),
+            rule
         )
 
     @staticmethod
