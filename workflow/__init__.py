@@ -14,7 +14,6 @@ DEFAULT             = '<value-here>'
 OUTPUT_FOLDER       = 'outfolder'
 TPS_RUN             = './scripts/run'
 CYTOSCAPE_DATATYPES = ""  # data type list set in runner.Annotations.generate_annotations
-EXECUTION_SETTINGS  = ['tps', 'annotations', 'all']
 
 class CytoscapeSettings(object):
     '''
@@ -114,7 +113,7 @@ class WorkflowRun(object):
             self.__make_out_folder(out_folder)
             return out_folder
 
-        if not self.docker_settings.use_tps:
+        if self.docker_settings.use_tps:
             out_folder = os.path.join(TPS_ROOT, 'output')
             self.__make_out_folder(out_folder)
             self.tps_input_settings._add_setting(OUTPUT_FOLDER, out_folder)
