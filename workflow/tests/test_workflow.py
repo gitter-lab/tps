@@ -3,8 +3,8 @@ import subprocess
 import pytest
 
 CONFIGS = {
-    'default':'default.yaml',
-    'tps-no-container':'tps-no-container.yaml'
+    'default': 'default.yaml',
+    'tps-no-container': 'tps-no-container.yaml'
 }
 class TestWorkFlow:
 
@@ -15,7 +15,7 @@ class TestWorkFlow:
 
     @pytest.mark.parametrize('config_type', ['default', 'tps-no-container'])
     def test_tps_workflow(self, config_type):
-        config = os.path.join(self.tps_root,'workflow' ,'tests', 'standards', CONFIGS[config_type])
+        config = os.path.join(self.tps_root, 'workflow', 'tests', 'standards', CONFIGS[config_type])
         call = ['python', self.tps_main, 
                 '--config', config, '--execute', 'tps']
         assert subprocess.run(call, check=True).returncode == 0
@@ -37,10 +37,11 @@ class TestWorkFlow:
             
         for file in outputs:
             assert os.path.isfile(file)
-            os.remove(file)  
+            os.remove(file)
+
     @pytest.mark.parametrize('config_type', ['default', 'tps-no-container'])
     def test_annotations(self, config_type):
-        config = os.path.join(self.tps_root,'workflow' ,'tests', 'standards', CONFIGS[config_type])
+        config = os.path.join(self.tps_root, 'workflow', 'tests', 'standards', CONFIGS[config_type])
         call = ['python', self.tps_main, 
                 '--config', config, '--execute', 'annotations']
         
@@ -61,7 +62,7 @@ class TestWorkFlow:
 
     @pytest.mark.parametrize('config_type', ['default', 'tps-no-container'])
     def test_full(self, config_type):
-        config = os.path.join(self.tps_root,'workflow' ,'tests', 'standards', CONFIGS[config_type])
+        config = os.path.join(self.tps_root,'workflow', 'tests', 'standards', CONFIGS[config_type])
         call = ['python', self.tps_main, 
                 '--config', config, '--execute', 'all']
         
@@ -81,9 +82,3 @@ class TestWorkFlow:
         for file in outputs:
             assert os.path.isfile(file)
             os.remove(file)
-
-    # def test_tps_container():
-    #     ...
-
-    # def test_cytoscape_container():
-    #     ...

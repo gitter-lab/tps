@@ -13,7 +13,6 @@ from py2cytoscape import cyrest
 from requests.exceptions import ConnectionError
 import time
 import sys
-import sys
 import requests
 from json import JSONDecodeError
 import subprocess

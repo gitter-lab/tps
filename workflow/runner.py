@@ -36,7 +36,7 @@ class Runner(object):
                 self.workflow_runner.build,
                 check=True
             )
-        except subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError:
             print('an error has occurred while trying to run TPS')
 
         self.output_files = self.__check_outputs()

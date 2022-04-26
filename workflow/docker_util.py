@@ -1,6 +1,5 @@
 import docker
 import re
-import os
 import functools
 from pathlib import PurePath, Path
 from typing import Dict, Optional, Any
@@ -22,6 +21,7 @@ def prepare_path_docker(orig_path: PurePath) -> str:
     Converts Windows file separators to posix separators.
     Converts Windows drive letters in absolute paths.
 
+    Modified from the SPRAS code
     Source: https://github.com/Reed-CompBio/spras
     Available under the MIT license
     """
