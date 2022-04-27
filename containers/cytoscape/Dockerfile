@@ -32,7 +32,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux
     conda init bash
 
 COPY containers/cytoscape/env.yml /docker/minimal_env.yml
-RUN conda env create -f docker/minimal_env.yml
+RUN conda env create -f /docker/minimal_env.yml
 
 COPY containers/cytoscape/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY containers/cytoscape/src/connect_cytoscape.py  /cytoscape/connect_cytoscape.py

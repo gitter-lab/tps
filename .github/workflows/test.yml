@@ -76,7 +76,10 @@ jobs:
         shell: bash --login {0}
         run: conda list
       # Run the workflow tests
-      - name: Test workflow
+      - name: Test workflow with pytest
         shell: bash --login {0}
         # Verbose output and disable stdout and stderr capturing
         run: pytest -vs workflow/tests/
+      - name: Test workflow with script
+        shell: bash --login {0}
+        run: bash workflow.sh --config workflow/config/default_config.yaml --execute all
