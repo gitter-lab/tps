@@ -18,6 +18,7 @@ from json import JSONDecodeError
 import subprocess
 import os
 from py2cytoscape.data.cyrest_client import CyRestClient
+from pathlib import Path
 
 ##########################################################################################################
 ##########################################################################################################
@@ -213,6 +214,8 @@ def _status(host, port, verbose=False):
 ##########################################################################################################
 ##########################################################################################################
 
+PDF_EXT  = '.pdf'
+
 def get_parser() -> argparse.ArgumentParser:
     '''
     :return: an argparse ArgumentParser object for parsing command
@@ -255,12 +258,13 @@ def load_tps_outputs(cyclient: CyRestClient,
         data_types (str)        : tps annotation column data types
         save_file (str)         : cytoscape session file name
     """
-
+    # convert input paths to abs paths
     _annot_file = os.path.abspath(annot_file)
     _style_file = os.path.abspath(style_file)
-    session_full_file = os.path.abspath(save_file)
-    session_net_image = os.path.abspath('output/tps-output-image.pdf')
-    for file in [session_full_file, session_net_image]:
+    _session_file = os.path.abspath(save_file)
+    _session_image = os.path.splitext(_session_file)[0] + PDF_EXT
+
+    for file in [_session_file, _session_image]:
         if os.path.isfile(file):
             print(f"overriding existing session file: {file}", flush=True)
             os.remove(file)
@@ -280,8 +284,8 @@ def load_tps_outputs(cyclient: CyRestClient,
         dataTypeList=data_types
     )
 
-    cyclient.session.save_as(session_file=session_full_file)
-    cyclient.view.export(options='PDF', outputFile=session_net_image)
+    cyclient.session.save_as(session_file=_session_file)
+    cyclient.view.export(options='PDF', outputFile=_session_image)
 
 class CytoscapeClient:
 

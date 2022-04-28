@@ -12,8 +12,7 @@ CLIENTS = {
     'CYTOSCAPE' : 'ajshedivy/cytoscape'
 }
 
-
-DOCKER_OUTFOLDER    = "output/"
+SEP = '/'
 
 def prepare_path_docker(orig_path: PurePath) -> str:
     """
@@ -53,33 +52,12 @@ class DockerClient(object):
             'CYTOSCAPE'  : self.prepare_cytoscape
         }
 
-    def _create_output_dir(self) -> None:
-        '''
-        generate output tag: output_tag_
-
-        '''
-        check_build = {
-            self.workflow_runner.build[i]: self.workflow_runner.build[i+1] \
-            for i in range(0, len(self.workflow_runner.build), 2)
-        }
-
-        if '--outfolder' in check_build:
-            print('override outfolder location')
-            del check_build['--outfolder']
-            self.workflow_runner.build = list(functools.reduce(lambda x, y: x+y, check_build.items()))
-
-        self.output_tag_ = DOCKER_OUTFOLDER
-
-        self.workflow_runner.build.extend(['--outfolder', self.output_tag_])
-        self.workflow_runner.out_folder = self.output_tag_
-
     def prepare_tps(self) -> Dict[str, Any]:
         """Helper function for preparing TPS Container Settings
 
         Returns:
             Dict[str, Any]: collection of Docker Settings
         """
-        self._create_output_dir()
         container_settings = {
             'work_dir':None,
             'command':None,
@@ -89,13 +67,13 @@ class DockerClient(object):
 
         work_dir    = Path(__file__).parent.parent.absolute()
         data_path   = prepare_path_docker(work_dir)+'/data'
-        output_path = prepare_path_docker(work_dir)+'/'+self.output_tag_
+        output_path = prepare_path_docker(work_dir)+SEP+self.workflow_runner.out_folder
         
         container_settings['work_dir'] = work_dir
         container_settings['command']  = self.workflow_runner.build
         container_settings['volumes']  = {
             data_path : {'bind': '/tps/data', 'mode': 'rw'},
-            output_path : {'bind': '/tps/'+self.output_tag_, 'mode': 'rw'}
+            output_path : {'bind': '/tps/'+self.workflow_runner.out_folder, 'mode': 'rw'}
         }
         container_settings['container_wdir'] = '/tps'
         container_settings['ports'] = {}
@@ -115,7 +93,6 @@ class DockerClient(object):
         Returns:
             Dict[str, Any]: collection of Docker Settings
         """
-        self._create_output_dir()
         container_settings = {
             'work_dir':None,
             'command':None,
@@ -125,12 +102,12 @@ class DockerClient(object):
         }
 
         work_dir    = Path(__file__).parent.parent.absolute()
-        output_path = prepare_path_docker(work_dir)+'/'+self.output_tag_
+        output_path = prepare_path_docker(work_dir)+'/'+self.workflow_runner.out_folder
 
         container_settings['work_dir'] = work_dir
         container_settings['command']  = self.build_cytoscape_command()
         container_settings['volumes']  = {
-            output_path : {'bind': '/cytoscape/'+self.output_tag_, 'mode': 'rw'}
+            output_path : {'bind': '/cytoscape/'+self.workflow_runner.out_folder, 'mode': 'rw'}
         }
 
         container_settings['ports'] = {
@@ -144,10 +121,10 @@ class DockerClient(object):
     def build_cytoscape_command(self):
         command = ['bash', 'connect.sh']
         args = {
-            '--save':    DOCKER_OUTFOLDER + os.path.basename(self.cytoscape.save_file),
-            '--style':   DOCKER_OUTFOLDER + os.path.basename(self.cytoscape.style_file),
-            '--annot':   DOCKER_OUTFOLDER + os.path.basename(self.cytoscape.annot_file),
-            '--network': DOCKER_OUTFOLDER + os.path.basename(self.cytoscape.network_file),
+            '--save':    self.workflow_runner.out_folder + SEP + os.path.basename(self.cytoscape.save_file),
+            '--style':   self.workflow_runner.out_folder + SEP + os.path.basename(self.cytoscape.style_file),
+            '--annot':   self.workflow_runner.out_folder + SEP + os.path.basename(self.cytoscape.annot_file),
+            '--network': self.workflow_runner.out_folder + SEP + os.path.basename(self.cytoscape.network_file),
             '--datatypes': self.cytoscape.data_types
         }
         command.extend(list(functools.reduce(lambda x, y: x+y, args.items())))
