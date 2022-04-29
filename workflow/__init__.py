@@ -3,10 +3,12 @@ Design inspired by
 https://github.com/Murali-group/Beeline/blob/master/BLRun/__init__.py
 
 '''
+from calendar import c
 import yaml
 import os
 from typing import Dict, Any, Union
 from pathlib import Path
+import sys
 
 # define defaults to be used during initialization
 TPS_ROOT                    =  os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -85,14 +87,15 @@ class WorkflowRun(object):
                 tps_input_settings: TPSSettings,
                 annot_input_settings: AnnotationsSettings,
                 docker_settings: DockerSettings,
-                rule: str):
-        self.rule                     = rule
+                config_file: Union[str, Path]):
+        self.config_file              = config_file
         self.cytoscape_input_settings = cytoscape_input_settings
         self.tps_input_settings       = tps_input_settings
         self.annot_input_settings     = annot_input_settings
         self.docker_settings          = docker_settings
         self.out_folder               = self.__get_out_folder()
         self.build                    = self.__build_tps_inputs(tps_input_settings)
+        
         
 
 
@@ -127,12 +130,10 @@ class WorkflowRun(object):
             print(f'outfolder provided: {self.tps_input_settings.args[OUTPUT_FOLDER]}')
             out_folder = self.tps_input_settings.args[OUTPUT_FOLDER]
             self.__make_out_folder(out_folder)
-
-        elif not self.docker_settings.use_tps and self.rule != 'tps':
-            out_folder = DEFAULT_OUTPUT_FOLDER
-            self.tps_input_settings._add_setting(OUTPUT_FOLDER, out_folder)
         else:
-            out_folder = TPS_ROOT
+            print("Error: provide output folder in {self.config_file.name} and re-run workflow")
+            print("exiting script")
+            sys.exit()
 
         return out_folder
 
@@ -143,8 +144,8 @@ class ConfigParser(object):
     '''
 
     @staticmethod
-    def parse(config_file_handle: Union[str, Path], rule: str) -> WorkflowRun:
-        config_map = yaml.load(config_file_handle)
+    def parse(config_file_handle: Union[str, Path]) -> WorkflowRun:
+        config_map = yaml.safe_load(config_file_handle)
         return WorkflowRun(
             ConfigParser.__parse_cytoscape_settings(
                 config_map['Cytoscape']),
@@ -155,7 +156,7 @@ class ConfigParser(object):
             ConfigParser.__parse_docker_settings(
                 config_map['Docker']
             ),
-            rule
+            config_file_handle
         )
 
     @staticmethod

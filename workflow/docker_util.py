@@ -4,7 +4,7 @@ import functools
 from pathlib import PurePath, Path
 from typing import Dict, Optional, Any
 
-from workflow.runner import *
+from workflow.workflow import *
 
 
 CLIENTS = {
