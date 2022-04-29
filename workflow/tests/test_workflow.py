@@ -1,7 +1,6 @@
 import os
 import subprocess
 import pytest
-from workflow import ConfigParser
 
 CONFIGS = {
     'default': 'default.yaml',
@@ -17,8 +16,6 @@ class TestWorkFlow:
     @pytest.mark.parametrize('config_type', ['default', 'tps-no-container'])
     def test_tps_workflow(self, config_type):
         config = os.path.join(self.tps_root, 'workflow', 'tests', 'standards', CONFIGS[config_type])
-        # with open(config, 'r') as conf:
-        #     settings = ConfigParser.parse(config)
         call = ['python', self.tps_main, 
                 '--config', config, '--execute', 'tps']
         assert subprocess.run(call, check=True).returncode == 0
@@ -37,8 +34,6 @@ class TestWorkFlow:
     @pytest.mark.parametrize('config_type', ['default', 'tps-no-container'])
     def test_annotations(self, config_type):
         config = os.path.join(self.tps_root, 'workflow', 'tests', 'standards', CONFIGS[config_type])
-        # with open(config, 'r') as conf:
-        #     settings = ConfigParser.parse(config)
         call = ['python', self.tps_main, 
                 '--config', config, '--execute', 'annotations']
         
@@ -60,8 +55,6 @@ class TestWorkFlow:
     @pytest.mark.parametrize('config_type', ['default', 'tps-no-container'])
     def test_full(self, config_type):
         config = os.path.join(self.tps_root,'workflow', 'tests', 'standards', CONFIGS[config_type])
-        # with open(config, 'r') as conf:
-        #     settings = ConfigParser.parse(config)
         call = ['python', self.tps_main, 
                 '--config', config, '--execute', 'all']
         

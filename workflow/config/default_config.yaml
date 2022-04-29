@@ -1,5 +1,5 @@
 Docker:
-    TPS: False
+    TPS: True
     Cytoscape: True
 
 TPS:
