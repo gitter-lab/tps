@@ -7,7 +7,7 @@ TPS:
         source: <value-here>
         threshold: <value-here>
         outlabel: <value-here>
-        outfolder: None          # default: None (tps root directory)
+        outfolder: output
     optional:
         partialmodel: None
         peptidemap: None

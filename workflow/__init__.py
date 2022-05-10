@@ -3,7 +3,6 @@ Design inspired by
 https://github.com/Murali-group/Beeline/blob/master/BLRun/__init__.py
 
 '''
-from calendar import c
 import yaml
 import os
 from typing import Dict, Any, Union
@@ -76,7 +75,7 @@ class DockerSettings(object):
 
 class WorkflowRun(object):
     '''
-    the WorkflowRun object is created by parsing a user-definded configuration
+    the WorkflowRun object is created by parsing a user-defined configuration
     file. Its methods are used to structure the inputs in an object oriented way as 
     well as build a TPS run configuration
 

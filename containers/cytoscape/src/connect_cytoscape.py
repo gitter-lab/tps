@@ -266,7 +266,7 @@ def load_tps_outputs(cyclient: CyRestClient,
 
     for file in [_session_file, _session_image]:
         if os.path.isfile(file):
-            print(f"overriding existing session file: {file}", flush=True)
+            print(f"overwriting existing Cytoscape file: {file}", flush=True)
             os.remove(file)
 
     cy = CyRestClient()

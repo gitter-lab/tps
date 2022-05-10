@@ -11,7 +11,7 @@ TPS:
         source: EGF_HUMAN
         threshold: 0.01
         outlabel: "test-runner-full"
-        outfolder: output          # default: None (tps root directory)
+        outfolder: output
     optional:
         partialmodel: data/resources/kinase-substrate-interactions.sif
         peptidemap: data/timeseries/peptide-mapping.tsv
