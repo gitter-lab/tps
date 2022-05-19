@@ -13,6 +13,7 @@ CLIENTS = {
 }
 
 SEP = '/'
+RUNNING = 'running'
 
 def prepare_path_docker(orig_path: PurePath) -> str:
     """
@@ -35,6 +36,33 @@ def prepare_path_docker(orig_path: PurePath) -> str:
         prepared_path = match.group(2)
         prepared_path = '//' + drive + prepared_path
     return prepared_path
+
+
+def is_container_running(container_name: str) -> Optional[bool]:
+    """check if docker container is running 
+
+    Args:
+        container_name (str): name of container
+
+    Returns:
+        Optional[bool]
+    """
+
+    client = docker.from_env()
+
+    try:
+        container = client.containers.get(container_name)
+    except docker.errors.NotFound as ex:
+        print(f"{ex.explanation}")
+        return False
+    except docker.errors.APIError as ex:
+        print(f"{ex.explanation}")
+        client.close()
+        return
+    else:
+        container_state = container.attrs["State"]
+        return container_state["Status"] == RUNNING
+
 
 
 class DockerClient(object):
@@ -131,6 +159,9 @@ class DockerClient(object):
         return command
 
     def run_docker(self) -> None:
+        if is_container_running(self.client_name):
+            print(f"container: {self.client} is running, please stop container and run workflow again")
+            return
 
         container_settings = self.DOCKER_SETTINGS.get(
             self.client_name, lambda: f'invalid client: {self.client}')()
@@ -142,6 +173,8 @@ class DockerClient(object):
             container_output = client.containers.run(
                 self.client,
                 container_settings['command'],
+                remove=True,
+                name=self.client_name,
                 stderr=True,
                 stdout=True,
                 volumes=container_settings['volumes'],
