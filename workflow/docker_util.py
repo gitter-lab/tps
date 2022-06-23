@@ -2,7 +2,7 @@ import docker
 import re
 import functools
 from pathlib import PurePath, Path
-from typing import Dict, Optional, Any
+from typing import Dict, List, Optional, Any
 
 from workflow.workflow import *
 
@@ -38,14 +38,14 @@ def prepare_path_docker(orig_path: PurePath) -> str:
     return prepared_path
 
 
-def is_container_running(container_name: str) -> Optional[bool]:
+def is_container_running(container_name: str) -> bool:
     """check if docker container is running 
 
     Args:
         container_name (str): name of container
 
     Returns:
-        Optional[bool]
+        bool
     """
 
     client = docker.from_env()
@@ -153,7 +153,7 @@ class DockerClient(object):
         container_settings['container_wdir'] = '/cytoscape'
         return container_settings
 
-    def build_cytoscape_command(self):
+    def build_cytoscape_command(self) -> List[str]:
         command = ['bash', 'connect.sh']
         args = {
             '--save':    self.workflow_runner.out_folder + SEP + os.path.basename(self.cytoscape.save_file),

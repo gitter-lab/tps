@@ -1,6 +1,7 @@
 import yaml
 import argparse
 import workflow
+from typing import Dict, Any
 from workflow.workflow import Runner, Annotations, Visualize
 
 yaml.warnings({'YAMLLoadWarning': False})
@@ -23,7 +24,7 @@ def get_parser() -> argparse.ArgumentParser:
 
     return parser
 
-def parse_arguments():
+def parse_arguments() -> Dict[str, Any]:
     '''
     Initialize a parser and use it to parse the command line arguments
     :return: parsed dictionary of command line arguments

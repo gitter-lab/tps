@@ -5,7 +5,7 @@ https://github.com/Murali-group/Beeline/blob/master/BLRun/__init__.py
 '''
 import yaml
 import os
-from typing import Dict, Any, Union
+from typing import Dict, Any, Union, List
 from pathlib import Path
 import sys
 
@@ -95,10 +95,7 @@ class WorkflowRun(object):
         self.out_folder               = self.__get_out_folder()
         self.build                    = self.__build_tps_inputs(tps_input_settings)
         
-        
-
-
-    def __build_tps_inputs(self, tps_input_settings):
+    def __build_tps_inputs(self, tps_input_settings) -> List[Union[str, Any]]:
         build = ['bash', TPS_RUN]
         for key, val in self.tps_input_settings.args.items():
             k = '--' + key

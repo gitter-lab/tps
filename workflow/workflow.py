@@ -1,4 +1,5 @@
 
+from pathlib import Path
 import subprocess
 import glob
 import os
@@ -42,7 +43,7 @@ class Runner(object):
         self.output_files = self.__check_outputs()
         return self
 
-    def __check_outputs(self):
+    def __check_outputs(self) -> Dict[str, Path]:
         print('check output', self.workflow_runner.out_folder)
         outputs = glob.glob(self.workflow_runner.out_folder + 
             f'*\{self.workflow_runner.tps_input_settings.output_label}*', recursive=False)
@@ -124,13 +125,12 @@ class Visualize:
         self.annot_file = os.path.abspath(self.annotations.out_annot_file)
         self.style_file = os.path.abspath(self.annotations.out_style_file)
     
-    def __process_exists(self, process_name):
-
+    def __process_exists(self, process_name) -> bool:
         if process_name in (p.name() for p in psutil.process_iter()):
             return True
         return False
 
-    def __find_path(self, name, path):
+    def __find_path(self, name, path) -> Path:
         result = []
         for root, dirs, files in os.walk(path):
             if name in files:
@@ -139,10 +139,9 @@ class Visualize:
         if not result:
             print(f'Cytoscape path: {path} not valid')
             return None
-        print(result)
         return result[0]
 
-    def check_cytpscape(self):
+    def check_cytpscape(self) -> None:
         check = self.__process_exists(self.cytoscape_input_settings.name)
 
         if not check:
@@ -153,12 +152,11 @@ class Visualize:
                 print('cytoscape path does not exist')
                 sys.exit()
             path = self.__find_path(self.cytoscape_input_settings.name, self.cytoscape_input_settings.path)
-            print(path)
             subprocess.Popen(path)
         else:
             print('Cytoscape already running')
 
-    def load_local_cytoscape(self):
+    def load_local_cytoscape(self) -> None:
         self.check_cytpscape()
         connection_count = 0
         json_count = 0
@@ -191,15 +189,14 @@ class Visualize:
         print(f'time elapsed: {end-start}')
         return self
 
-    def load_docker_cytoscape(self):
+    def load_docker_cytoscape(self) -> 'Visualize':
         print('using Cytoscape Docker Container')
         # only import Docker_client when needed
         from workflow.docker_util import DockerClient
         DockerClient('CYTOSCAPE', self.runner.workflow_runner, self).run_docker()
         return self
 
-    def load_cytoscape(self):
-
+    def load_cytoscape(self) -> None:
         if self.runner.workflow_runner.docker_settings.use_cytoscape:
             # docker side step
             self.load_docker_cytoscape()
