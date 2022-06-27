@@ -168,9 +168,9 @@ class DockerClient(object):
     def run_docker(self) -> None:
         if is_container_running(self.client_name):
             print(f"container: {self.client} is running, please stop container and run workflow again")
-            return
+            sys.exit()
         else:
-            print(f"{self.client} not running, start container ...")
+            print(f"start {self.client} container ...")
 
         container_settings = self.DOCKER_SETTINGS.get(
             self.client_name, lambda: f'invalid client: {self.client}')()
