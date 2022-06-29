@@ -56,15 +56,14 @@ def is_container_running(container_name: str) -> bool:
 
     # the current container is not running (cant be found) -> False
     except docker.errors.NotFound as ex:
-        print(f"{ex.explanation}")
         return False
 
     # APIErrors can happen
     except docker.errors.APIError as ex:
         print(f"{ex.explanation}")
         client.close()
-        return False
-    
+        sys.exit()
+          
     # check container status here, means that current container is probably running
     else:
         container_state = container.attrs["State"]
@@ -169,8 +168,6 @@ class DockerClient(object):
         if is_container_running(self.client_name):
             print(f"container: {self.client} is running, please stop container and run workflow again")
             sys.exit()
-        else:
-            print(f"start {self.client} container ...")
 
         container_settings = self.DOCKER_SETTINGS.get(
             self.client_name, lambda: f'invalid client: {self.client}')()
