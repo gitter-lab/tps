@@ -62,4 +62,4 @@ if [ $? -ne 0 ]; then
 fi
 echo "environment activated"
  
-python tps_runner.py --config ${CONFIG} --execute ${EXECUTE} 
+python tps_workflow.py --config ${CONFIG} --execute ${EXECUTE} 

@@ -1,0 +1,71 @@
+#!/bin/bash
+
+if (($# == 0)); then
+    exit 0
+fi
+
+POSITIONAL_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -s|--save)
+      SAVE="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -y|--style)
+      STYLE="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -a|--annot)
+      ANNOTATIONS="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -n|--network)
+      NETWORK="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -d|--datatypes)
+      DATATYPES="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -*|--*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
+set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+
+echo "SAVE FILE         = ${SAVE}"
+echo "STYLE FILE        = ${STYLE}"
+echo "ANNOTATIONS FILE  = ${ANNOTATIONS}"
+echo "NETWORK FILE      = ${NETWORK}"
+echo "DATA TYPES        = ${DATATYPES}" 
+
+if [[ -n $1 ]]; then
+    echo "error: invalid arguments"
+    exit 0
+fi
+
+echo "activate TPS environment"
+eval "$(conda shell.bash hook)"
+conda activate tps_workflow
+
+if [ $? -ne 0 ]; then
+   	echo "environment does not exist"
+	echo "creating TPS environment"
+	conda env create -f /docker/minimal_env.yml
+	conda activate tps_workflow
+fi
+echo "environment activated"
+
+python connect_cytoscape.py --save ${SAVE} --style ${STYLE} --annot ${ANNOTATIONS} --network ${NETWORK} --datatypes ${DATATYPES}

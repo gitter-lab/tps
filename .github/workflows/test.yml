@@ -20,10 +20,41 @@ jobs:
           auto-activate-base: false
           auto-update-conda: false
           miniconda-version: 'latest'
+      # Log conda environment contents
+      - name: Log conda environment
+        shell: bash --login {0}
+        run: conda list
       # Run the PCSF tests in the pcsf conda environment
       - name: Test PCSF
         shell: bash --login {0}
         run: pytest pcsf/tests/
+  docker:
+    name: Build Docker images
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+      - name: Build TPS Docker image
+        uses: docker/build-push-action@v1
+        with:
+          path: .
+          dockerfile: containers/tps/Dockerfile
+          repository: ajshedivy/tps
+          tags: latest
+          cache_froms: ajshedivy/tps:latest
+          push: false
+      - name: Build Cytoscape Docker image
+        uses: docker/build-push-action@v1
+        with:
+          path: .
+          dockerfile: containers/cytoscape/Dockerfile
+          repository: ajshedivy/cytoscape
+          tags: latest
+          cache_froms: ajshedivy/cytoscape:latest
+          push: false
   workflow:
     name: Test TPS workflow
     runs-on: ${{ matrix.os }}
@@ -40,35 +71,15 @@ jobs:
           environment-file: workflow/minimal_env.yml
           auto-activate-base: false
           miniconda-version: 'latest'
+      # Log conda environment contents
+      - name: Log conda environment
+        shell: bash --login {0}
+        run: conda list
       # Run the workflow tests
-      - name: Test workflow
+      - name: Test workflow with pytest
         shell: bash --login {0}
         # Verbose output and disable stdout and stderr capturing
         run: pytest -vs workflow/tests/
-  docker:
-    name: Build Docker images
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-    steps:
-      - name: checkout repository
-        uses: actions/checkout@v2
-      - name: Build TPS Docker image
-        uses: docker/build-push-action@v1
-        with:
-          path: .
-          dockerfile: docker/tps/Dockerfile
-          repository: ajshedivy/tps
-          tags: latest
-          cache_froms: ajshedivy/tps:latest
-          push: false
-      - name: Build Cytoscape Docker image
-        uses: docker/build-push-action@v1
-        with:
-          path: .
-          dockerfile: docker/cytoscape/Dockerfile
-          repository: ajshedivy/cytoscape
-          tags: latest
-          cache_froms: ajshedivy/cytoscape:latest
-          push: false
+      - name: Test workflow with script
+        shell: bash --login {0}
+        run: bash workflow.sh --config workflow/config/default_config.yaml --execute all

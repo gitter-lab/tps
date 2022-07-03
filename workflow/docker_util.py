@@ -1,11 +1,10 @@
 import docker
-import sys, re, os, shutil, tempfile, functools
+import re
+import functools
 from pathlib import PurePath, Path
+from typing import Dict, List, Optional, Any
 
-from py2cytoscape import data
-from typing import Dict, List, Optional, Any, Type
-
-from workflow.runner import *
+from workflow.workflow import *
 
 
 CLIENTS = {
@@ -13,8 +12,8 @@ CLIENTS = {
     'CYTOSCAPE' : 'ajshedivy/cytoscape'
 }
 
-
-DOCKER_OUTFOLDER    = "output/"
+SEP = '/'
+RUNNING = 'running'
 
 def prepare_path_docker(orig_path: PurePath) -> str:
     """
@@ -22,6 +21,7 @@ def prepare_path_docker(orig_path: PurePath) -> str:
     Converts Windows file separators to posix separators.
     Converts Windows drive letters in absolute paths.
 
+    Modified from the SPRAS code
     Source: https://github.com/Reed-CompBio/spras
     Available under the MIT license
     """
@@ -36,6 +36,39 @@ def prepare_path_docker(orig_path: PurePath) -> str:
         prepared_path = match.group(2)
         prepared_path = '//' + drive + prepared_path
     return prepared_path
+
+
+def is_container_running(container_name: str) -> bool:
+    """check if docker container is running 
+
+    Args:
+        container_name (str): name of container
+
+    Returns:
+        bool
+    """
+
+    client = docker.from_env()
+    
+    # test if current Container (TPS or Cytoscape) is running
+    try:
+        container = client.containers.get(container_name)
+
+    # the current container is not running (cant be found) -> False
+    except docker.errors.NotFound as ex:
+        return False
+
+    # APIErrors can happen
+    except docker.errors.APIError as ex:
+        print(f"{ex.explanation}")
+        client.close()
+        sys.exit()
+          
+    # check container status here, means that current container is probably running
+    else:
+        container_state = container.attrs["State"]
+        return container_state["Status"] == RUNNING
+
 
 
 class DockerClient(object):
@@ -53,33 +86,12 @@ class DockerClient(object):
             'CYTOSCAPE'  : self.prepare_cytoscape
         }
 
-    def _create_output_dir(self) -> None:
-        '''
-        generate output tag: output_tag_
-
-        '''
-        check_build = {
-            self.workflow_runner.build[i]: self.workflow_runner.build[i+1] \
-            for i in range(0, len(self.workflow_runner.build), 2)
-        }
-
-        if '--outfolder' in check_build:
-            print('override outfolder location')
-            del check_build['--outfolder']
-            self.workflow_runner.build = list(functools.reduce(lambda x, y: x+y, check_build.items()))
-
-        self.output_tag_ = DOCKER_OUTFOLDER
-
-        self.workflow_runner.build.extend(['--outfolder', self.output_tag_])
-        self.workflow_runner.out_folder = self.output_tag_
-
     def prepare_tps(self) -> Dict[str, Any]:
         """Helper function for preparing TPS Container Settings
 
         Returns:
             Dict[str, Any]: collection of Docker Settings
         """
-        self._create_output_dir()
         container_settings = {
             'work_dir':None,
             'command':None,
@@ -89,15 +101,16 @@ class DockerClient(object):
 
         work_dir    = Path(__file__).parent.parent.absolute()
         data_path   = prepare_path_docker(work_dir)+'/data'
-        output_path = prepare_path_docker(work_dir)+'/'+self.output_tag_
+        output_path = prepare_path_docker(work_dir)+SEP+self.workflow_runner.out_folder
         
         container_settings['work_dir'] = work_dir
         container_settings['command']  = self.workflow_runner.build
         container_settings['volumes']  = {
             data_path : {'bind': '/tps/data', 'mode': 'rw'},
-            output_path : {'bind': '/tps/'+self.output_tag_, 'mode': 'rw'}
+            output_path : {'bind': '/tps/'+self.workflow_runner.out_folder, 'mode': 'rw'}
         }
         container_settings['container_wdir'] = '/tps'
+        container_settings['ports'] = {}
 
         return container_settings
 
@@ -107,41 +120,54 @@ class DockerClient(object):
 
         requirements:
             - output directory
-            - 
+            - style file
+            - annotations file
+            - network file
 
         Returns:
             Dict[str, Any]: collection of Docker Settings
         """
-        raise NotImplementedError
+        container_settings = {
+            'work_dir':None,
+            'command':None,
+            'volumes': Dict[str, Dict[str, Any]],
+            'ports': Dict[str, Dict[str, Any]],
+            'container_wdir':None,
+        }
 
+        work_dir    = Path(__file__).parent.parent.absolute()
+        output_path = prepare_path_docker(work_dir)+'/'+self.workflow_runner.out_folder
 
-    def run(self) -> None:
-        self._create_output_dir()
+        container_settings['work_dir'] = work_dir
+        container_settings['command']  = self.build_cytoscape_command()
+        container_settings['volumes']  = {
+            output_path : {'bind': '/cytoscape/'+self.workflow_runner.out_folder, 'mode': 'rw'}
+        }
 
-        # Initialize a Docker client using environment variables
-        client = docker.from_env()
+        container_settings['ports'] = {
+            '1234' : 1234,
+            '5900' : 5900
+        }
 
-        # work dir set as the root of the repository
-        work_dir = Path(__file__).parent.parent.absolute()
+        container_settings['container_wdir'] = '/cytoscape'
+        return container_settings
 
-        try:
-            container_output = client.containers.run(
-                self.client,
-                self.workflow_runner.build,
-                stderr=True,
-                volumes={
-                    prepare_path_docker(work_dir)+'/data': {'bind': '/tps/data', 'mode': 'rw'},
-                    prepare_path_docker(work_dir)+'/'+self.output_tag_: {'bind': '/tps/'+self.output_tag_, 'mode': 'rw'}
-                },
-                working_dir='/tps')
-            print(container_output.decode('utf-8'))
-
-        finally:
-            # Not sure whether this is needed
-            client.close()
-
+    def build_cytoscape_command(self) -> List[str]:
+        command = ['bash', 'connect.sh']
+        args = {
+            '--save':    self.workflow_runner.out_folder + SEP + os.path.basename(self.cytoscape.save_file),
+            '--style':   self.workflow_runner.out_folder + SEP + os.path.basename(self.cytoscape.style_file),
+            '--annot':   self.workflow_runner.out_folder + SEP + os.path.basename(self.cytoscape.annot_file),
+            '--network': self.workflow_runner.out_folder + SEP + os.path.basename(self.cytoscape.network_file),
+            '--datatypes': self.cytoscape.data_types
+        }
+        command.extend(list(functools.reduce(lambda x, y: x+y, args.items())))
+        return command
 
     def run_docker(self) -> None:
+        if is_container_running(self.client_name):
+            print(f"container: {self.client} is running, please stop container and run workflow again")
+            sys.exit()
 
         container_settings = self.DOCKER_SETTINGS.get(
             self.client_name, lambda: f'invalid client: {self.client}')()
@@ -153,10 +179,17 @@ class DockerClient(object):
             container_output = client.containers.run(
                 self.client,
                 container_settings['command'],
+                remove=True,
+                name=self.client_name,
                 stderr=True,
+                stdout=True,
                 volumes=container_settings['volumes'],
-                working_dir=container_settings['container_wdir'])
-            print(container_output.decode('utf-8'))
+                ports=container_settings['ports'],
+                working_dir=container_settings['container_wdir'],
+                detach=True)
+            output = container_output.attach(stdout=True, stream=True, logs=True)
+            for line in output:
+                print(line.decode('utf-8'))
 
         finally:
             # Not sure whether this is needed

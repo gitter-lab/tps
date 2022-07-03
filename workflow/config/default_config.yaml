@@ -1,6 +1,6 @@
 Docker:
     TPS: True
-    Cytoscape: False
+    Cytoscape: True
 
 TPS:
     required:
@@ -10,11 +10,11 @@ TPS:
         prevscores: data/timeseries/p-values-prev.tsv
         source: EGF_HUMAN
         threshold: 0.01
-        outlabel: "test-runner-full" 
+        outlabel: "test-runner-full"
+        outfolder: output
     optional:
         partialmodel: data/resources/kinase-substrate-interactions.sif
         peptidemap: data/timeseries/peptide-mapping.tsv
-        outfolder: None          # default: None (tps root directory)
         solver: None
         slack: None
         bitvect: None
@@ -35,6 +35,7 @@ Annotations:
     addZero: True           # default
     logDefault: -1.0        # default
     repairMissing: False    # default
+# These settings are ignored when Cytoscape is run through Docker
 Cytoscape: 
     path: ~\Documents\Comp_bio\Cytoscape_v3.7.1
     session: "tps_session_full.cys"

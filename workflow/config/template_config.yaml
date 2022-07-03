@@ -6,11 +6,11 @@ TPS:
         prevscores: <value-here>
         source: <value-here>
         threshold: <value-here>
-        outlabel: <value-here> 
+        outlabel: <value-here>
+        outfolder: output
     optional:
         partialmodel: None
         peptidemap: None
-        outfolder: None          # default: None (tps root directory)
         solver: None
         slack: None
         bitvect: None

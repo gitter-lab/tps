@@ -1,6 +1,6 @@
 Docker:
     TPS: False
-    Cytoscape: False
+    Cytoscape: True
 TPS:
     required:
         network: data/networks/input-network.tsv
@@ -9,11 +9,11 @@ TPS:
         prevscores: data/timeseries/p-values-prev.tsv
         source: EGF_HUMAN
         threshold: 0.01
-        outlabel: "test-runner-full" 
+        outlabel: "test-runner-full"
+        outfolder: test-output
     optional:
         partialmodel: data/resources/kinase-substrate-interactions.sif
         peptidemap: data/timeseries/peptide-mapping.tsv
-        outfolder: None          # default: None (tps root directory)
         solver: None
         slack: None
         bitvect: None
