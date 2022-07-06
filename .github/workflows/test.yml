@@ -82,4 +82,4 @@ jobs:
         run: pytest -vs workflow/tests/
       - name: Test workflow with script
         shell: bash --login {0}
-        run: bash workflow.sh --config workflow/config/default_config.yaml --execute all
+        run: bash workflow.sh --config workflow/config/config.yaml --execute all

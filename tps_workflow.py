@@ -1,3 +1,18 @@
+'''
+The TPS Workflow is an encapsulated python-centric wrapper for the TPS core 
+software. The TPS input settings are defined in a config file that is 
+passed into the /workflow.sh driver script to start the workflow run.
+Once complete, all tps output files are placed in the specified output directory
+
+usage: bash workflow.sh --config [config.yml] --execute [all|annotations|tps]
+
+To run full workflow : 
+    bash workflow.sh --config workflow/config/config.yaml --execute all
+
+@author : Adam Shedivy
+
+'''
+
 import yaml
 import argparse
 import workflow

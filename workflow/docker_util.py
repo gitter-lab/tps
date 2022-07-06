@@ -1,3 +1,11 @@
+'''
+This file defines the utility functions and classes used for interation
+with Docker
+
+@author : Adam Shedivy
+
+'''
+
 import functools
 import re
 from pathlib import Path, PurePath
@@ -39,13 +47,17 @@ def prepare_path_docker(orig_path: PurePath) -> str:
 
 
 def is_container_running(container_name: str) -> bool:
-    """check if docker container is running 
+    """check if a container is running
 
-    Args:
-        container_name (str): name of container
+    Parameters
+    ----------
+    container_name : str
+        name of container assigned after calling docker run
 
-    Returns:
-        bool
+    Returns
+    -------
+    bool
+        True if running, else False
     """
 
     client = docker.from_env()
@@ -72,6 +84,39 @@ def is_container_running(container_name: str) -> bool:
 
 
 class DockerClient(object):
+    """
+    A class used to prepare docker containers for TPS workflow. Used by workflow/workflow.py
+
+    ...
+
+    Attributes
+    ----------
+    client_name : str
+        string name of container to prepare
+    client : str
+        name of container tag
+    worflow_runner : Optional[WorkflowRun]
+        workflow object with input parameters and settings
+    outfolder : Union[str, Pathlike]
+        ouput folder location
+    cytoscape : Optional[Visualize]
+        cytoscape input and parameter settings
+
+    Methods
+    -------
+    prepare_tps(self) -> Dict[str, Any]
+        prepare TPS docker input settings
+
+    prepare_cytoscape(self) -> Dict[str, Any]
+        prepare Cytoscape docker input settings
+
+    _build_cytoscape_command(self) -> List[str]
+        helper function for generating cytoscape bash run command
+
+    run_docker(self) -> None
+        run specified docker client
+
+    """
     def __init__(self, client: str, 
                 workflow_settings: Optional[WorkflowRun] = None, 
                 cytoscape: Optional[Visualize] = None) -> None:
@@ -87,10 +132,12 @@ class DockerClient(object):
         }
 
     def prepare_tps(self) -> Dict[str, Any]:
-        """Helper function for preparing TPS Container Settings
+        """helper function for generating tps docker input settings. Used when client_name = 'TPS'
 
-        Returns:
-            Dict[str, Any]: collection of Docker Settings
+        Returns
+        -------
+        Dict[str, Any]
+            dictionary of docker input settings used by run_docker
         """
         container_settings = {
             'work_dir':None,
@@ -123,8 +170,9 @@ class DockerClient(object):
             - style file
             - annotations file
             - network file
-
-        Returns:
+        Returns
+        -------
+        Dict[str, Any]
             Dict[str, Any]: collection of Docker Settings
         """
         container_settings = {
@@ -139,7 +187,7 @@ class DockerClient(object):
         output_path = prepare_path_docker(work_dir)+'/'+self.workflow_runner.out_folder
 
         container_settings['work_dir'] = work_dir
-        container_settings['command']  = self.build_cytoscape_command()
+        container_settings['command']  = self._build_cytoscape_command()
         container_settings['volumes']  = {
             output_path : {'bind': '/cytoscape/'+self.workflow_runner.out_folder, 'mode': 'rw'}
         }
@@ -152,7 +200,14 @@ class DockerClient(object):
         container_settings['container_wdir'] = '/cytoscape'
         return container_settings
 
-    def build_cytoscape_command(self) -> List[str]:
+    def _build_cytoscape_command(self) -> List[str]:
+        """private helper function for build cytoscape run command used in Cytoscape Docker container
+
+        Returns
+        -------
+        List[str]
+            list of bash args
+        """
         command = ['bash', 'connect.sh']
         args = {
             '--save':    self.workflow_runner.out_folder + SEP + os.path.basename(self.cytoscape.save_file),
@@ -165,6 +220,8 @@ class DockerClient(object):
         return command
 
     def run_docker(self) -> None:
+        """driver function for running specified docker client"""
+
         if is_container_running(self.client_name):
             print(f"container: {self.client} is running, please stop container and run workflow again")
             sys.exit()

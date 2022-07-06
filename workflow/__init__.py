@@ -109,7 +109,7 @@ class WorkflowRun(object):
         if not os.path.exists(folder):
             os.makedirs(folder)
 
-    def __get_out_folder(self) -> None:
+    def __get_out_folder(self) -> Union[Path, str]:
         """
         if output folder provided in config:
             return folder
