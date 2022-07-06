@@ -1,11 +1,11 @@
-import docker
-import re
 import functools
-from pathlib import PurePath, Path
-from typing import Dict, List, Optional, Any
+import re
+from pathlib import Path, PurePath
+from typing import Any, Dict, List, Optional
+
+import docker
 
 from workflow.workflow import *
-
 
 CLIENTS = {
     'TPS'       : 'ajshedivy/tps',

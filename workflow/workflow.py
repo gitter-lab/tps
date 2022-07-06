@@ -1,20 +1,20 @@
 
-from pathlib import Path
-import subprocess
 import glob
 import os
-import time
+import subprocess
 import sys
+import time
+from json.decoder import JSONDecodeError
+from pathlib import Path
+from typing import Any, Dict
+
 import psutil
+from containers.cytoscape.src.connect_cytoscape import load_tps_outputs
+from py2cytoscape import cyrest
+from requests.exceptions import ConnectionError, HTTPError
+
 from workflow import WorkflowRun
 from workflow.utilities import PrepTemporalCytoscapeTPS
-from requests.exceptions import ConnectionError
-from requests.exceptions import HTTPError
-from json.decoder import JSONDecodeError
-from py2cytoscape import cyrest
-from typing import Dict, Any
-from containers.cytoscape.src.connect_cytoscape import load_tps_outputs
-
 class Runner(object):
     '''
     the Runner object encapsulates the WorkflowRun object in order to execute
