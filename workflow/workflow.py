@@ -313,7 +313,7 @@ class Visualize:
         """driver function for generating Cytoscape session"""
         if self.runner.workflow_runner.docker_settings.use_cytoscape:
             # docker side step
-            self._load_docker_cytoscape()
+            self.load_docker_cytoscape()
             return
         self.load_local_cytoscape()
         return

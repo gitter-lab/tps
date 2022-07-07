@@ -52,7 +52,7 @@ class TestWorkFlow:
             assert os.path.isfile(file)
             os.remove(file)
 
-    @pytest.mark.parametrize('config_type', ['default', 'tps-no-container'])
+    @pytest.mark.parametrize('config_type', ['default'])
     def test_full(self, config_type):
         config = os.path.join(self.tps_root,'workflow', 'tests', 'standards', CONFIGS[config_type])
         call = ['python', self.tps_main, 
