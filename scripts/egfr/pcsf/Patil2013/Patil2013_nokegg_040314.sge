@@ -1,0 +1,48 @@
+#!/bin/bash
+# run from current working directory
+#$ -cwd
+# join stdout and stderr
+#$ -j y
+#$ -S /bin/bash
+# output directory, use the default output filename
+#$ -o /nfs/data/agitter/MSG/results/egfr/Patil2013_nokegg_040314
+# job name
+#$ -N patil2013nk
+# number of slots to use in the whole_nodes parallel environment
+# the whole_nodes pe will allocate all of these slots on a single machine
+#$ -pe whole_nodes 4
+# Export the environmental variable that set the seed in an external script
+#$ -v PCSFSEED
+
+echo JOB_ID $JOB_ID
+echo JOB_NAME $JOB_NAME
+echo NSLOTS $NSLOTS
+echo SGE_O_WORKDIR $SGE_O_WORKDIR
+
+codeD=/nfs/data/agitter/MSG/src/protocol/PCSF
+
+prizefile=/nfs/data/agitter/MSG/data/terminal/Patil2013_wt_prizes.txt
+edgefile=/nfs/latdata/datasets/interactomes/exported/Patil2013_nokegg_unique_pcsf.txt
+conffile=conf_0.1_0.05_10_0_0.01_1e-3.txt
+# Manually have to save Patil2013_sources.txt as dummyNeighbors.txt in the working dir
+# This has been fixed, just need to update the PCSF code
+dummy=4
+msgpath=/nfs/apps/bin
+outpath=/nfs/data/agitter/MSG/results/egfr/Patil2013_nokegg_040314
+outlabel=Patil2013_wt_seed${PCSFSEED}
+noisyruns=0
+
+CMD="python $codeD/PCSF.py \
+	-p $prizefile \
+	-e $edgefile \
+	-c $conffile \
+	-d $dummy \
+	--msgpath=$msgpath \
+	--outpath=$outpath \
+	--outlabel=$outlabel \
+	--cyto28 \
+	--noisyPrizes=$noisyruns \
+	-s $PCSFSEED"
+
+echo $CMD
+$CMD

@@ -1,0 +1,46 @@
+#!/bin/bash
+# run from current working directory
+#$ -cwd
+# join stdout and stderr
+#$ -j y
+#$ -S /bin/bash
+# output directory, use the default output filename
+#$ -o /nfs/data/agitter/MSG/results/egfr/Cao2012_021414
+# job name
+#$ -N cao2012
+# number of slots to use in the whole_nodes parallel environment
+# the whole_nodes pe will allocate all of these slots on a single machine
+#$ -pe whole_nodes 4
+
+echo JOB_ID $JOB_ID
+echo JOB_NAME $JOB_NAME
+echo NSLOTS $NSLOTS
+echo SGE_O_WORKDIR $SGE_O_WORKDIR
+
+codeD=/nfs/data/agitter/MSG/src/protocol/PCSF
+
+prizefile=/nfs/data/agitter/MSG/data/terminal/cao2012a-uniprot-prizes-q-0.02.txt
+edgefile=/nfs/data/agitter/MSG/data/interactome/PhosphoSite_iRefIndex13.0_uniprot_overwrite_pcsf.txt
+conffile=conf_0.1_0.1_10_0_0.1.txt
+# Manually have to save Cao2012_sources.txt as dummyNeighbors.txt in the working dir
+dummy=4
+msgpath=/nfs/apps/bin
+outpath=/nfs/data/agitter/MSG/results/egfr/Cao2012_021414
+outlabel=Cao2012_slp76plus_q002
+noisyruns=10
+seed=21414
+
+CMD="python $codeD/PCSF.py \
+	-p $prizefile \
+	-e $edgefile \
+	-c $conffile \
+	-d $dummy \
+	--msgpath=$msgpath \
+	--outpath=$outpath \
+	--outlabel=$outlabel \
+	--cyto28 \
+	--noisyPrizes=$noisyruns \
+	-s $seed"
+
+echo $CMD
+$CMD

@@ -1,0 +1,50 @@
+#!/bin/bash
+# run from current working directory
+#$ -cwd
+# join stdout and stderr
+#$ -j y
+#$ -S /bin/bash
+# output directory, use the default output filename
+# all SGE output files go to the same output directory regardless of beta and mu
+#$ -o /nfs/data/agitter/MSG/results/egfr/McKenna2014_051414
+# job name
+#$ -N mckenna2014
+# number of slots to use in the whole_nodes parallel environment
+# the whole_nodes pe will allocate all of these slots on a single machine
+#$ -pe whole_nodes 4
+# Export the environmental variable that set the seed in an external script
+#$ -v PCSFSEED
+
+echo JOB_ID $JOB_ID
+echo JOB_NAME $JOB_NAME
+echo NSLOTS $NSLOTS
+echo SGE_O_WORKDIR $SGE_O_WORKDIR
+
+codeD=/nfs/data/agitter/MSG/src/protocol/PCSF
+
+beta=0.1
+mu=0.01
+
+prizefile=/nfs/data/agitter/MSG/data/terminal/McKenna2014_replicate_C_proteinPrizes_firstProtein.txt
+edgefile=/nfs/data/agitter/MSG/data/interactome/PhosphoSite_iRefIndex13.0_uniprot_overwrite_pcsf.txt
+conffile=conf_0.1_${beta}_10_${mu}_0.01_1e-3.txt
+dummy=/nfs/data/agitter/MSG/data/terminal/McKenna2014_sources.txt
+msgpath=/nfs/apps/bin
+outpath=/nfs/data/agitter/MSG/results/egfr/McKenna2014_051414/beta${beta}_mu${mu}
+outlabel=McKenna2014_repC_firstProt_seed${PCSFSEED}
+noisyruns=0
+
+CMD="python $codeD/PCSF.py \
+	-p $prizefile \
+	-e $edgefile \
+	-c $conffile \
+	-d $dummy \
+	--msgpath=$msgpath \
+	--outpath=$outpath \
+	--outlabel=$outlabel \
+	--cyto28 \
+	--noisyPrizes=$noisyruns \
+	-s $PCSFSEED"
+
+echo $CMD
+$CMD

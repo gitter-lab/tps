@@ -1,0 +1,71 @@
+#!/bin/bash
+# run from current working directory
+#$ -cwd
+# join stdout and stderr
+#$ -j y
+#$ -S /bin/bash
+# output directory, use the default output filename
+#$ -o /nfs/data/agitter/MSG/results/egfr/Ciaccio2010_100313
+# job name
+#$ -N ciaccio2010
+# number of slots to use in the whole_nodes parallel environment
+# the whole_nodes pe will allocate all of these slots on a single machine
+#$ -pe whole_nodes 1
+
+echo JOB_ID $JOB_ID
+echo JOB_NAME $JOB_NAME
+echo NSLOTS $NSLOTS
+echo SGE_O_WORKDIR $SGE_O_WORKDIR
+
+codeD=/nfs/data/agitter/MSG/src
+
+interactomepath=/nfs/data/agitter/MSG/data/interactome
+indirectedfilename=psiquic_scored_irefwebv9_uniprot_ids_3thresh.txt
+terminalpath=/nfs/data/agitter/MSG/data/terminal
+terminalfile=Ciaccio2010_medianLevel_antibody_Phospho-Antibody_con200_protPrizes.txt
+beta=1
+resultpath=/nfs/data/agitter/MSG/results/egfr/Ciaccio2010_100313
+stpname=Ciaccio2010_phospho_con200
+resultfilename=$stpname.stp
+
+CMD="python $codeD/MessagePassingInput_tony.py --interactomepath $interactomepath \
+            --terminalpath $terminalpath \
+            --resultpath $resultpath \
+            --indirectedfilename $indirectedfilename \
+            --terminalfile $terminalfile \
+            --resultfilename $resultfilename \
+            --beta $beta"
+echo $CMD
+$CMD
+
+msgpath=/nfs/apps/bin
+outputpath=$resultpath
+depth=10
+conn=3
+stppath=$resultpath
+W=0.1_0.1_0.1
+#beta=0.05_0.05_0.05
+beta=0.075_0.075_0.075
+#beta=0.1_0.1_0.1
+#beta=0.5_0.5_0.5
+#beta=1.0_1.0_1.0
+exclude=0
+species=human
+givenset=Ciaccio2010_sources.txt
+threads=$NSLOTS
+
+CMD="python $codeD/PCSF_MSG_FullRun3_tony.py \
+            --outputpath $outputpath \
+            --msgpath $msgpath \
+            --depth $depth \
+            --conn $conn \
+            --stppath $stppath \
+            --stpfile $stpname \
+            --W $W \
+            --beta $beta \
+            --exclude $exclude \
+            --species $species \
+            --targetfile $givenset \
+            --threads $threads"
+echo $CMD
+$CMD
