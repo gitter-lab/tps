@@ -1,0 +1,64 @@
+#!/bin/bash
+# run from current working directory
+#$ -cwd
+# join stdout and stderr
+#$ -j y
+#$ -S /bin/bash
+# output directory, use the default output filename
+#$ -o /nfs/data/agitter/MSG/results/egfr/Ciaccio2010_052213
+# job name
+#$ -N egfr
+
+echo JOB_ID $JOB_ID
+echo JOB_NAME $JOB_NAME
+echo NSLOTS $NSLOTS
+echo SGE_O_WORKDIR $SGE_O_WORKDIR
+
+codeD=/nfs/data/agitter/MSG/src
+
+interactomepath=/nfs/data/agitter/MSG/data/interactome
+terminalpath=/nfs/data/agitter/MSG/data/terminal
+indirectedfilename=9606.string.9.0.ExpScores5thresh_geneSymbols.txt
+terminalfile=Ciaccio2010_maxLevel_filtered_Phospho-Antibody_con200_prizes.txt
+beta=1
+resultpath=/nfs/data/agitter/MSG/results/egfr/Ciaccio2010_052213
+stpname=Ciaccio2010_Phospho-Antibody_con200
+resultfilename=$stpname.stp
+
+CMD="python $codeD/MessagePassingInput_tony.py --interactomepath $interactomepath \
+            --terminalpath $terminalpath \
+            --resultpath $resultpath \
+            --indirectedfilename $indirectedfilename \
+            --terminalfile $terminalfile \
+            --resultfilename $resultfilename \
+            --beta $beta"
+echo $CMD
+$CMD
+
+msgpath=/nfs/apps/bin
+outputpath=$resultpath
+depth=10
+conn=3
+stppath=$resultpath
+W=5_5_5
+#beta=0.1_0.51_0.1
+#beta=0.05_0.05_0.05
+beta=0.01_0.01_0.01
+exclude=0
+species=human
+givenset=$terminalfile
+
+CMD="python $codeD/PCSF_MSG_FullRun3_tony.py \
+            --outputpath $outputpath \
+            --msgpath $msgpath \
+            --depth $depth \
+            --conn $conn \
+            --stppath $stppath \
+            --stpfile $stpname \
+            --W $W \
+            --beta $beta \
+            --exclude $exclude \
+            --species $species \
+            --targetfile $givenset"
+echo $CMD
+$CMD
