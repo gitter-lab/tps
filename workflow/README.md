@@ -2,7 +2,7 @@
 
 **TPS workflow overview**
 
-![Overview](../workflow/images/TPS_workflow.png)
+![Overview](../workflow/images/TPS_diagram2.svg)
 
 The TPS/workflow module utilizes the TPS repository structure in order to run the TPS software end-to-end in order to produce Cytoscape sessions. 
 

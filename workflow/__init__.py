@@ -3,11 +3,12 @@ Design inspired by
 https://github.com/Murali-group/Beeline/blob/master/BLRun/__init__.py
 
 '''
-import yaml
 import os
-from typing import Dict, Any, Union, List
-from pathlib import Path
 import sys
+from pathlib import Path
+from typing import Any, Dict, List, Union
+
+import yaml
 
 # define defaults to be used during initialization
 TPS_ROOT                    =  os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -108,7 +109,7 @@ class WorkflowRun(object):
         if not os.path.exists(folder):
             os.makedirs(folder)
 
-    def __get_out_folder(self) -> None:
+    def __get_out_folder(self) -> Union[Path, str]:
         """
         if output folder provided in config:
             return folder

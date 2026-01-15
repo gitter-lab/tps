@@ -9,16 +9,17 @@ Citation:
 
 '''
 import argparse
-from py2cytoscape import cyrest
-from requests.exceptions import ConnectionError
-import time
-import sys
-import requests
-from json import JSONDecodeError
-import subprocess
 import os
-from py2cytoscape.data.cyrest_client import CyRestClient
+import subprocess
+import sys
+import time
+from json import JSONDecodeError
 from pathlib import Path
+
+import requests
+from py2cytoscape import cyrest
+from py2cytoscape.data.cyrest_client import CyRestClient
+from requests.exceptions import ConnectionError
 
 ##########################################################################################################
 ##########################################################################################################
